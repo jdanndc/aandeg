@@ -1,4 +1,5 @@
 import json
+from aandeg.aandeg_util import load_config
 from aandeg.handlers import PostgresHandler
 
 
@@ -12,7 +13,6 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-    with open('.aandeg.json') as json_file:
-        config = json.load(json_file)
+    config = load_config()
     lambda_handler(None, config)
 
