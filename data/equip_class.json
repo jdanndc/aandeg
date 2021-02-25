@@ -1,0 +1,160 @@
+{
+  "manifest": "initial load",
+  "equip-classes": [
+    {
+      "etype": "equip-class",
+      "eid": "water-supply"
+    },
+    {
+      "etype": "equip-class",
+      "eid": "water-main",
+      "depends": [
+        "water-supply"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "water-circuit",
+      "depends": [
+        "water-main"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "water-outlet",
+      "depends": [
+        "water-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-water-filtration",
+      "depends": [
+        "water-outlet"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "elec-supply"
+    },
+    {
+      "etype": "equip-class",
+      "eid": "elec-main",
+      "depends": [
+        "elec-supply"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "elec-circuit",
+      "depends": [
+        "elec-main"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "elec-outlet",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-ice-maker",
+      "depends": [
+        "elec-circuit",
+        "device-water-filtration"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-dishwasher",
+      "depends": [
+        "elec-circuit",
+        "water-outlet"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-hvac",
+      "depends": [
+        "elec-main"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-water-heater",
+      "depends": [
+        "elec-main",
+        "water-main"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-co2-delivery",
+      "depends": [
+        "co2-main"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-fountain-soda",
+      "depends": [
+        "device-water-filtration",
+        "device-co2-delivery",
+        "elec-outlet"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "store-open",
+      "depends": [
+        "device-hvac",
+        "device-water-heater",
+        "water-main"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-oven",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-fridge-prep",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-fridge-beverage",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-warmer-queso",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-warming-window",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-cold-prep",
+      "depends": [
+        "elec-circuit"
+      ]
+    }
+  ]
+}

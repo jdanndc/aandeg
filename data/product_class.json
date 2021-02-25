@@ -1,0 +1,55 @@
+{ "manifest": "initial load",
+  "product-classes": [
+    {
+      "ptype": "product-class",
+      "pid": "hot-burrito-toasted",
+      "equip_depends": [
+        "device-fridge-prep",
+        "device-oven",
+        "device-toaster"
+      ]
+    },
+    {
+      "ptype": "product-class",
+      "pid": "cold-fountain-soda",
+      "equip_depends": [
+        "device-fountain-soda",
+        "device-ice-maker"
+      ]
+    },
+    {
+      "ptype": "product-class",
+      "pid": "cold-bottle-soda",
+      "equip_depends": [
+        "device-fridge-beverage"
+      ]
+    },
+    {
+      "ptype": "product-class",
+      "pid": "dry-chips-corn-spicy"
+    },
+    {
+      "ptype": "product-class",
+      "pid": "warm-chips",
+      "equip_depends": [
+        "device-warming-window"
+      ]
+    },
+    {
+      "ptype": "product-class",
+      "pid": "warm-chips-salsa",
+      "equip_depends": [
+        "device-warming-window",
+        "device-cold-prep"
+      ]
+    },
+    {
+      "ptype": "product-class",
+      "pid": "warm-chips-queso",
+      "equip_depends": [
+        "device-warming-window",
+        "device-warmer-queso"
+      ]
+    }
+  ]
+}

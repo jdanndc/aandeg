@@ -1,0 +1,10 @@
+{
+  "dbinfo": {
+    "db_host": "localhost",
+    "db_port": 5432,
+    "db_name": "aandeg",
+    "db_user": "jdann",
+    "db_pass": ""
+  }
+}
+

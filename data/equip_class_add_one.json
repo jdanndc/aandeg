@@ -1,0 +1,12 @@
+{
+  "manifest": "add one equip",
+  "equip-classes": [
+    {
+      "etype": "equip-class",
+      "eid": "device-toaster",
+      "depends": [
+        "elec-outlet"
+      ]
+    }
+  ]
+}
