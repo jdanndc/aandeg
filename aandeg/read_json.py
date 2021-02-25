@@ -3,13 +3,18 @@ from decimal import Decimal
 from aandeg.exceptions import MissingDataError, DuplicateEidError, UnknownDependsError
 
 
-def read_equip_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
-    equip_classes_data = None
+def get_json_data(fn_or_json, is_filename):
+    json_data = None
     if is_filename:
         with open(fn_or_json) as json_file:
-            equip_classes_data = json.load(json_file, parse_float=Decimal)
+            json_data = json.load(json_file, parse_float=Decimal)
     else:
-        equip_classes_data = json.loads(fn_or_json)
+        json_data = json.loads(fn_or_json)
+    return json_data
+
+
+def read_equip_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
+    equip_classes_data = get_json_data(fn_or_json, is_filename)
     for attr in ["manifest", "equip-classes"]:
         if not equip_classes_data.get(attr):
             raise MissingDataError("equip-classes missing '{}' attribute".format(attr))
@@ -32,4 +37,27 @@ def read_equip_data_json(fn_or_json, handler, is_filename=False, check_depends=F
         if handler:
             handler.handle_equip(etype, eid, depends)
         seen_depends.add(eid)
+
+
+def read_prod_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
+    prod_classes_data = get_json_data(fn_or_json, is_filename)
+    for attr in ["manifest", "product-classes"]:
+        if not prod_classes_data.get(attr):
+            raise MissingDataError("product-classes missing '{}' attribute".format(attr))
+    # check for local duplicates
+    seen_pid = set()
+    for prod_class in prod_classes_data.get("product-classes"):
+        for attr in ["ptype", "pid"]:
+            if not prod_class.get(attr):
+                raise MissingDataError("product-class missing '{}' attribute".format(attr))
+        pid = prod_class.get('pid')
+        ptype = prod_class.get('ptype')
+        if pid in seen_pid:
+            raise DuplicateEidError("duplicate pid: '{}".format(pid))
+        depends = []
+        if prod_class.get('equip_depends'):
+            for depend in prod_class.get('equip_depends'):
+                depends.append(depend)
+        if handler:
+            handler.handle_prod(ptype, pid, depends)
 

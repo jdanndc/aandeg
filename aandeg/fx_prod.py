@@ -3,7 +3,7 @@ from aandeg_util import load_config, file_to_json_data
 import json
 from os import path
 from aandeg.handlers import PostgresHandler
-from aandeg.read_json import read_equip_data_json
+from aandeg.read_json import read_prod_data_json
 
 
 def lambda_handler(event, context):
@@ -12,7 +12,7 @@ def lambda_handler(event, context):
         raise Exception("no dbinfo")
     with PostgresHandler(dbinfo.get("db_name"), dbinfo.get("db_user"), dbinfo.get("db_pass"), dbinfo.get("db_host"),
                                                           dbinfo.get("db_port")) as pgm:
-        read_equip_data_json(event.get("payload"), pgm, is_filename=False)
+        read_prod_data_json(event.get("payload"), pgm, is_filename=False)
 
 
 if __name__ == "__main__":

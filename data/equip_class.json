@@ -144,6 +144,13 @@
     },
     {
       "etype": "equip-class",
+      "eid": "device-warmer-fudge",
+      "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
       "eid": "device-warming-window",
       "depends": [
         "elec-circuit"
@@ -153,6 +160,14 @@
       "etype": "equip-class",
       "eid": "device-cold-prep",
       "depends": [
+        "elec-circuit"
+      ]
+    },
+    {
+      "etype": "equip-class",
+      "eid": "device-icecream-machine",
+      "depends": [
+        "device-water-filtration",
         "elec-circuit"
       ]
     }

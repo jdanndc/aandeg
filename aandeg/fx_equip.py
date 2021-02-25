@@ -1,4 +1,5 @@
 import sys, getopt
+from aandeg_util import load_config, file_to_json_data
 import json
 from os import path
 from aandeg.handlers import PostgresHandler
@@ -12,8 +13,6 @@ def lambda_handler(event, context):
     with PostgresHandler(dbinfo.get("db_name"), dbinfo.get("db_user"), dbinfo.get("db_pass"), dbinfo.get("db_host"),
                                                           dbinfo.get("db_port")) as pgm:
         read_equip_data_json(event.get("payload"), pgm, is_filename=False)
-    #print(event)
-    #print(context)
 
 
 if __name__ == "__main__":
@@ -26,14 +25,7 @@ if __name__ == "__main__":
         if o == '-i':
             filename = a
 
-    if filename:
-        if path.exists(filename):
-            with open(filename, 'r') as file:
-                data = file.read()
-                event = {'payload': data}
-                config = {}
-                with open('.aandeg.json') as json_file:
-                    config = json.load(json_file)
-                lambda_handler(event, config)
-        else:
-            raise Exception("file not found {}".format(filename))
+    data = file_to_json_data(filename)
+    event = {'payload': data}
+    config = load_config()
+    lambda_handler(event, config)
