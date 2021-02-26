@@ -1,6 +1,6 @@
 from aandeg.handlers import CollectHandler, PostgresHandler
 from aandeg.read_json import read_store_data_json
-from aandeg.util import make_timestamp
+from aandeg.util import aandeg_config
 
 store_test_json_str = """
 {
@@ -40,15 +40,13 @@ def test_read_store_str():
 
 def test_read_store_file():
     # just make sure we can read the file without errors
-    filename = "../data/store.json"
     ch = CollectHandler()
-    read_store_data_json(filename, ch, is_filename=True)
+    read_store_data_json("./data/store.json", ch, is_filename=True)
 
 def test_read_store_db_handler():
-    temp = '_' + make_timestamp()
-    with PostgresHandler("aandeg", "jdann", "", "localhost", 5432, table_suffix=temp) as pgm:
+    with PostgresHandler(*aandeg_config().get_args(), is_testing=True) as pgm:
         read_store_data_json(store_test_json_str, pgm, is_filename=False)
         cursor = pgm.connection.cursor()
-        cursor.execute("""SELECT * FROM {}""".format(pgm.store_table_name))
+        cursor.execute("""SELECT * FROM store""")
         assert(len(cursor.fetchall()) == 3)
 

@@ -1,9 +1,12 @@
-from aandeg.util import load_config
+from aandeg.util import aandeg_config
 from aandeg.handlers import PostgresHandler
+from read_json import read_equip_class_data_json, read_prod_class_data_json, read_store_class_data_json, read_store_data_json
+
 
 def test_incident():
-    dbinfo = load_config().get('dbinfo')
-    with PostgresHandler(dbinfo.get("db_name"), dbinfo.get("db_user"), dbinfo.get("db_pass"), dbinfo.get("db_host"), dbinfo.get("db_port")) as pgm:
+    with PostgresHandler(*aandeg_config().get_args(), is_testing=True) as pgm:
+        read_equip_class_data_json("./data/equip_class.json", pgm, is_filename=True)
+        pgm.update_imputed_depends()
         s_id = 'store-1'
         pgm.clear_store_incidents(s_id)
         ec_id = 'device-water-filtration'
@@ -19,8 +22,14 @@ def test_incident():
             print(sp)
 
 def test_store_is_open():
-    dbinfo = load_config().get('dbinfo')
-    with PostgresHandler(dbinfo.get("db_name"), dbinfo.get("db_user"), dbinfo.get("db_pass"), dbinfo.get("db_host"), dbinfo.get("db_port")) as pgm:
+    with PostgresHandler(*aandeg_config().get_args(), is_testing=True) as pgm:
+        read_equip_class_data_json("./data/equip_class.json", pgm, is_filename=True)
+        pgm.update_imputed_depends()
+        read_prod_class_data_json("./data/product_class.json", pgm, is_filename=True)
+        read_store_class_data_json("./data/store_class.json", pgm, is_filename=True)
+        read_store_data_json("./data/store.json", pgm, is_filename=True)
+        pgm.update_store_classes_with_all_products()
+
         s_id = 'store-1'
         pgm.clear_store_incidents(s_id)
         assert(pgm.store_is_open(s_id))

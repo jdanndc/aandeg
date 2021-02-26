@@ -8,7 +8,7 @@ def lambda_handler(event, context):
         raise Exception("no dbinfo")
     with PostgresHandler(dbinfo.get("db_name"), dbinfo.get("db_user"), dbinfo.get("db_pass"), dbinfo.get("db_host"),
                          dbinfo.get("db_port")) as pgm:
-        pgm.update_store_class_default_with_all_prod()
+        pgm.update_store_classes_with_all_products()
 
 
 if __name__ == "__main__":

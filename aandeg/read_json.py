@@ -1,6 +1,7 @@
 import json
 from decimal import Decimal
 from aandeg.exceptions import MissingDataError, DuplicateIdError, UnknownDependsError
+from aandeg.handlers import BaseHandler
 
 # TODO:
 #  when building this file, feels like we could use some polymorphism.  consider for later
@@ -17,6 +18,7 @@ def get_json_data(fn_or_json, is_filename):
 
 
 def read_equip_class_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
+    assert(isinstance(handler, BaseHandler))
     equip_class_data = get_json_data(fn_or_json, is_filename)
     for attr in ["manifest", "equip-classes"]:
         if not equip_class_data.get(attr):
@@ -43,6 +45,7 @@ def read_equip_class_data_json(fn_or_json, handler, is_filename=False, check_dep
 
 
 def read_prod_class_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
+    assert(isinstance(handler, BaseHandler))
     prod_class_data = get_json_data(fn_or_json, is_filename)
     for attr in ["manifest", "product-classes"]:
         if not prod_class_data.get(attr):
@@ -65,6 +68,7 @@ def read_prod_class_data_json(fn_or_json, handler, is_filename=False, check_depe
             handler.handle_prod_class(type, pc_id, depends)
 
 def read_store_class_data_json(fn_or_json, handler, is_filename=False):
+    assert(isinstance(handler, BaseHandler))
     store_class_data = get_json_data(fn_or_json, is_filename)
     for attr in ["manifest", "store-classes"]:
         if not store_class_data.get(attr):
@@ -82,6 +86,7 @@ def read_store_class_data_json(fn_or_json, handler, is_filename=False):
             handler.handle_store_class(type, sc_id)
 
 def read_store_data_json(fn_or_json, handler, is_filename=False):
+    assert(isinstance(handler, BaseHandler))
     store_data = get_json_data(fn_or_json, is_filename)
     for attr in ["manifest", "stores"]:
         if not store_data.get(attr):
