@@ -73,3 +73,29 @@ def scratch_cte_query():
     water-circuit	water-main
     water-main	    water-supply
     """
+
+    foo = """
+/* all products for a store, based on its store class */
+select  scp.sc_id, s.s_id, scp.pc_id 
+from store_class_prod scp 
+inner join store s 
+on scp.sc_id=s.sc_id and ( s.s_id = 'store-3')
+"""
+
+    foo = """
+/* all unavailable equipment given one equipment fail */
+select ecp.ec_id 
+from equip_class_depends ecp 
+where ec_id_parent 
+in (select ec_id from incident_report ir where ir.s_id = 'store-1')    
+    """
+
+    foo = """
+/* all unavailable products given equipment fail for store */
+select distinct pcd.pc_id from prod_class_depends pcd 
+where pcd.ec_id_parent  in (
+select ecp.ec_id 
+from equip_class_depends ecp 
+where ec_id_parent 
+in (select ec_id from incident_report ir where ir.s_id = 'store-1'))
+    """

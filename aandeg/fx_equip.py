@@ -1,5 +1,5 @@
 import sys, getopt
-from aandeg_util import load_config, file_to_json_data
+from util import load_config, file_to_json_data
 from aandeg.handlers import PostgresHandler
 from aandeg.read_json import read_equip_class_data_json
 

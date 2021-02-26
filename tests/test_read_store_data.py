@@ -1,6 +1,6 @@
 from aandeg.handlers import CollectHandler, PostgresHandler
 from aandeg.read_json import read_store_data_json
-from aandeg.aandeg_util import make_timestamp
+from aandeg.util import make_timestamp
 
 store_test_json_str = """
 {

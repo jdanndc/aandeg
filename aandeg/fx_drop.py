@@ -1,5 +1,4 @@
-import json
-from aandeg.aandeg_util import load_config
+from aandeg.util import load_config
 from aandeg.handlers import PostgresHandler
 
 

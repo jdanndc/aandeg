@@ -1,6 +1,6 @@
 from aandeg.handlers import CollectHandler, PostgresHandler
 from aandeg.read_json import read_equip_class_data_json
-from aandeg.aandeg_util import make_timestamp
+from aandeg.util import make_timestamp
 
 def test_read_equip_data():
     str = """

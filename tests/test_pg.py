@@ -1,4 +1,4 @@
-from aandeg_util import create_connection
+from util import create_connection
 
 def test_connect():
     db_name = 'aandeg'
