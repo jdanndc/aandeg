@@ -49,19 +49,19 @@ def scratch_cte_query():
     q = """
     WITH RECURSIVE parents AS (
 	    SELECT
-		    eid,
-		    eid_parent
+		    ec_id,
+		    ec_id_parent
 	    FROM
-	    	equip_depends_2021_02_24_21_53_42
+	    	equip_class_depends_2021_02_24_21_53_42
 	    WHERE
-	    	eid = 'device-ice-maker'
+	    	ec_id = 'device-ice-maker'
     	UNION
 	    	SELECT
-	    		e.eid,
-    			e.eid_parent
+	    		e.ec_id,
+    			e.ec_id_parent
     		FROM
-			equip_depends_2021_02_24_21_53_42 e
-    		INNER JOIN parents p ON p.eid_parent = e.eid
+			equip_class_depends_2021_02_24_21_53_42 e
+    		INNER JOIN parents p ON p.ec_id_parent = e.ec_id
     ) SELECT
 	    *
     FROM

@@ -1,0 +1,10 @@
+{
+  "manifest": "initial load",
+  "store-classes": [
+    {
+      "type": "store-class",
+      "sc_id": "store-default"
+    }
+  ]
+}
+

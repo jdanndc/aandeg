@@ -2,75 +2,74 @@
   "manifest": "initial load",
   "product-classes": [
     {
-      "ptype": "product-class",
-      "pid": "hot-burrito-toasted",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "hot-burrito-toasted",
+      "equip_class_depends": [
         "device-fridge-prep",
         "device-oven",
         "device-toaster"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "cold-fountain-soda",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "cold-fountain-soda",
+      "equip_class_depends": [
         "device-fountain-soda",
         "device-ice-maker"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "cold-bottle-soda",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "cold-bottle-soda",
+      "equip_class_depends": [
         "device-fridge-beverage"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "dry-chips-corn-spicy"
+      "type": "product-class",
+      "pc_id": "dry-chips-corn-spicy"
     },
     {
-      "ptype": "product-class",
-      "pid": "warm-chips",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "warm-chips",
+      "equip_class_depends": [
         "device-warming-window"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "warm-chips-salsa",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "warm-chips-salsa",
+      "equip_class_depends": [
         "device-warming-window",
         "device-cold-prep"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "cold-taco-salad",
-      "equip_depends": [
-        "device-warming-window",
+      "type": "product-class",
+      "pc_id": "cold-taco-salad",
+      "equip_class_depends": [
         "device-cold-prep"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "warm-chips-queso",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "warm-chips-queso",
+      "equip_class_depends": [
         "device-warming-window",
         "device-warmer-queso"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "ice-cream-cone",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "ice-cream-cone",
+      "equip_class_depends": [
         "device-icecream-machine"
       ]
     },
     {
-      "ptype": "product-class",
-      "pid": "ice-cream-sundae-hot-fudge",
-      "equip_depends": [
+      "type": "product-class",
+      "pc_id": "ice-cream-sundae-hot-fudge",
+      "equip_class_depends": [
         "device-warmer-fudge",
         "device-icecream-machine"
       ]

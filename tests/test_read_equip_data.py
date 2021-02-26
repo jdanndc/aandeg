@@ -11,12 +11,12 @@ def test_read_equip_data():
         "manifest": "initial load",
         "equip-classes": [
             {
-                "etype": "equip-class",
-                "eid": "water-supply"
+                "type": "equip-class",
+                "ec_id": "water-supply"
             },
             {
-                "etype": "equip-class",
-                "eid": "water-main",
+                "type": "equip-class",
+                "ec_id": "water-main",
                 "depends": [
                     "water-supply"
                 ]

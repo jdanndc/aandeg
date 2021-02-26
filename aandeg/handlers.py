@@ -11,15 +11,15 @@ class PostgresHandler(object):
         self.db_host = db_host
         self.db_port = db_port
         self.equip_class_table_name = 'equip_class'
-        self.equip_depends_table_name = 'equip_depends'
+        self.equip_class_depends_table_name = 'equip_class_depends'
         self.prod_class_table_name = 'prod_class'
-        self.prod_depends_table_name = 'prod_depends'
+        self.prod_class_depends_table_name = 'prod_class_depends'
         self.drop_equip_table_on_exit = False
         if table_suffix:
             self.equip_class_table_name = self.equip_class_table_name + table_suffix
-            self.equip_depends_table_name = self.equip_depends_table_name + table_suffix
+            self.equip_class_depends_table_name = self.equip_class_depends_table_name + table_suffix
             self.prod_class_table_name = self.prod_class_table_name + table_suffix
-            self.prod_depends_table_name = self.prod_depends_table_name + table_suffix
+            self.prod_class_depends_table_name = self.prod_class_depends_table_name + table_suffix
         self.connection = None
 
     def table_exists(self, table_name):
@@ -32,25 +32,25 @@ class PostgresHandler(object):
         cursor = self.connection.cursor()
         cursor.execute(
             """ CREATE TABLE {} (
-                    eid VARCHAR(128) PRIMARY KEY,
-                    etype VARCHAR(128) NOT NULL
+                    ec_id VARCHAR(128) PRIMARY KEY,
+                    type VARCHAR(128) NOT NULL
                     )
             """.format(self.equip_class_table_name))
         cursor.close()
         self.connection.commit()
 
-    def create_equip_depends_table(self):
+    def create_equip_class_depends_table(self):
         cursor = self.connection.cursor()
         # TODO:
         #  CREATE TYPE valid_depend_types AS ENUM ('defined', 'imputed');
-        #  CREATE TABLE t (eid..., eid_parent..., depend_type VALID_DEPEND_TYPES);
+        #  CREATE TABLE t (ec_id..., ec_id_parent..., depend_type VALID_DEPEND_TYPES);
         cursor.execute(
             """ CREATE TABLE {} (
-                    eid VARCHAR(128) NOT NULL,
-                    eid_parent VARCHAR(128) NOT NULL,
+                    ec_id VARCHAR(128) NOT NULL,
+                    ec_id_parent VARCHAR(128) NOT NULL,
                     depend_type VARCHAR(8) NOT NULL
                     )
-            """.format(self.equip_depends_table_name))
+            """.format(self.equip_class_depends_table_name))
         cursor.close()
         self.connection.commit()
 
@@ -58,25 +58,25 @@ class PostgresHandler(object):
         cursor = self.connection.cursor()
         cursor.execute(
             """ CREATE TABLE {} (
-                    pid VARCHAR(128) PRIMARY KEY,
-                    ptype VARCHAR(128) NOT NULL
+                    pc_id VARCHAR(128) PRIMARY KEY,
+                    type VARCHAR(128) NOT NULL
                     )
             """.format(self.prod_class_table_name))
         cursor.close()
         self.connection.commit()
 
-    def create_prod_depends_table(self):
+    def create_prod_class_depends_table(self):
         cursor = self.connection.cursor()
         # TODO:
         #  CREATE TYPE valid_depend_types AS ENUM ('defined', 'imputed');
-        #  CREATE TABLE t (pid..., eid_parent..., depend_type VALID_DEPEND_TYPES);
+        #  CREATE TABLE t (pc_id..., ec_id_parent..., depend_type VALID_DEPEND_TYPES);
         cursor.execute(
             """ CREATE TABLE {} (
-                    pid VARCHAR(128) NOT NULL,
-                    eid_parent VARCHAR(128) NOT NULL,
+                    pc_id VARCHAR(128) NOT NULL,
+                    ec_id_parent VARCHAR(128) NOT NULL,
                     depend_type VARCHAR(8) NOT NULL
                     )
-            """.format(self.prod_depends_table_name))
+            """.format(self.prod_class_depends_table_name))
         cursor.close()
         self.connection.commit()
 
@@ -85,12 +85,12 @@ class PostgresHandler(object):
         # create equip table if does not exist
         if not self.table_exists(self.equip_class_table_name):
             self.create_equip_table()
-        if not self.table_exists(self.equip_depends_table_name):
-            self.create_equip_depends_table()
+        if not self.table_exists(self.equip_class_depends_table_name):
+            self.create_equip_class_depends_table()
         if not self.table_exists(self.prod_class_table_name):
             self.create_prod_table()
-        if not self.table_exists(self.prod_depends_table_name):
-            self.create_prod_depends_table()
+        if not self.table_exists(self.prod_class_depends_table_name):
+            self.create_prod_class_depends_table()
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
@@ -103,72 +103,72 @@ class PostgresHandler(object):
         self.connection.close()
         return True
 
-    def handle_equip(self, etype, eid, depend_eids=None):
-        # TODO: check that eid_parent exists before inserting into the depends table
-        #  we do check while reading the file, but the eid of a eid_parent could be deleted out-of-band
+    def handle_equip_class(self, type, ec_id, depend_ec_ids=None):
+        # TODO: check that ec_id_parent exists before inserting into the depends table
+        #  we do check while reading the file, but the ec_id of a ec_id_parent could be deleted out-of-band
         cursor = self.connection.cursor()
-        cursor.execute(""" INSERT INTO {}(eid,etype) VALUES(%s, %s) """.format(self.equip_class_table_name), (eid, etype))
-        if depend_eids is not None:
-            for depend in depend_eids:
-                # TODO: confirm that the eid for depend exists in equip_class table
+        cursor.execute(""" INSERT INTO {}(ec_id,type) VALUES(%s, %s) """.format(self.equip_class_table_name), (ec_id, type))
+        if depend_ec_ids is not None:
+            for depend in depend_ec_ids:
+                # TODO: confirm that the ec_id for depend exists in equip_class table
                 #  was previously checked during json parsing, but disabled to allow for update
-                cursor.execute(""" INSERT INTO {}(eid,eid_parent,depend_type) VALUES(%s, %s, %s) """.format(self.equip_depends_table_name),
-                               (eid, depend, 'defined'))
+                cursor.execute(""" INSERT INTO {}(ec_id,ec_id_parent,depend_type) VALUES(%s, %s, %s) """.format(self.equip_class_depends_table_name),
+                               (ec_id, depend, 'defined'))
         self.connection.commit()
 
-    def handle_prod(self, ptype, pid, depend_eids=None):
-        # TODO: check that eid exists before inserting into the depends table
+    def handle_prod_class(self, type, pc_id, depend_ec_ids=None):
+        # TODO: check that ec_id exists before inserting into the depends table
         cursor = self.connection.cursor()
-        cursor.execute(""" INSERT INTO {}(pid,ptype) VALUES(%s, %s) """.format(self.prod_class_table_name), (pid, ptype))
-        if depend_eids is not None:
-            for depend in depend_eids:
-                # TODO: confirm that the eid for depend exists in equip_class table
+        cursor.execute(""" INSERT INTO {}(pc_id,type) VALUES(%s, %s) """.format(self.prod_class_table_name), (pc_id, type))
+        if depend_ec_ids is not None:
+            for depend in depend_ec_ids:
+                # TODO: confirm that the ec_id for depend exists in equip_class table
                 #  was previously checked during json parsing, but disabled to allow for update
                 pass
-                cursor.execute(""" INSERT INTO {}(pid,eid_parent,depend_type) VALUES(%s, %s, %s) """.format(self.prod_depends_table_name), (pid, depend, 'defined'))
+                cursor.execute(""" INSERT INTO {}(pc_id,ec_id_parent,depend_type) VALUES(%s, %s, %s) """.format(self.prod_class_depends_table_name), (pc_id, depend, 'defined'))
         self.connection.commit()
 
-    def _add_depend_pairs_to_set(self, eid, all_depend_pairs, add_pair_for_self=True):
-        # get all ancestors of this eid, using CTE query
+    def _add_depend_pairs_to_set(self, ec_id, all_depend_pairs, add_pair_for_self=True):
+        # get all ancestors of this ec_id, using CTE query
         cursor = self.connection.cursor()
         cursor.execute("""
             WITH RECURSIVE parents AS (
-        	    SELECT eid, eid_parent
+        	    SELECT ec_id, ec_id_parent
         	    FROM {}
-        	    WHERE eid = %s 
-            	UNION SELECT e.eid, e.eid_parent FROM {} e
-            		INNER JOIN parents p ON p.eid_parent = e.eid
+        	    WHERE ec_id = %s 
+            	UNION SELECT e.ec_id, e.ec_id_parent FROM {} e
+            		INNER JOIN parents p ON p.ec_id_parent = e.ec_id
             ) SELECT * FROM parents;
-        	""".format(self.equip_depends_table_name, self.equip_depends_table_name), (eid,))
+        	""".format(self.equip_class_depends_table_name, self.equip_class_depends_table_name), (ec_id,))
         for row in cursor:
-            all_depend_pairs.add((eid, row[1]))
+            all_depend_pairs.add((ec_id, row[1]))
         if add_pair_for_self:
-            all_depend_pairs.add((eid, eid))
+            all_depend_pairs.add((ec_id, ec_id))
 
     def update_imputed_depends(self):
         cursor = self.connection.cursor()
-        cursor.execute("""DELETE FROM {} WHERE depend_type = 'imputed'""".format(self.equip_depends_table_name))
+        cursor.execute("""DELETE FROM {} WHERE depend_type = 'imputed'""".format(self.equip_class_depends_table_name))
         # TODO: this is here for stepping thru and watching in DB, delete later
         self.connection.commit()
-        # TODO: consider the case where an eid is in the equip_depends table, but not in the equip_class table
-        cursor.execute("""SELECT DISTINCT eid FROM {}""".format(self.equip_class_table_name))
+        # TODO: consider the case where an ec_id is in the equip_class_depends table, but not in the equip_class table
+        cursor.execute("""SELECT DISTINCT ec_id FROM {}""".format(self.equip_class_table_name))
         distinct_equip_types = []
         for row in cursor:
             distinct_equip_types.append(row[0])
         # create a set of tuples of each depend pair
         all_depend_pairs = set()
-        for eid in distinct_equip_types:
-            self._add_depend_pairs_to_set(eid, all_depend_pairs)
+        for ec_id in distinct_equip_types:
+            self._add_depend_pairs_to_set(ec_id, all_depend_pairs)
         for dp in all_depend_pairs:
             print(dp)
             cursor.execute("""
-            INSERT INTO {} (eid, eid_parent, depend_type)
+            INSERT INTO {} (ec_id, ec_id_parent, depend_type)
             SELECT %s, %s, %s
             WHERE
                 NOT EXISTS (
-                    SELECT eid FROM {} WHERE eid = %s and eid_parent = %s
+                    SELECT ec_id FROM {} WHERE ec_id = %s and ec_id_parent = %s
                 )
-            """.format(self.equip_depends_table_name, self.equip_depends_table_name),
+            """.format(self.equip_class_depends_table_name, self.equip_class_depends_table_name),
                            (dp[0], dp[1], 'imputed', dp[0], dp[1]))
         self.connection.commit()
         cursor.close()
@@ -177,9 +177,9 @@ class PostgresHandler(object):
     def drop_tables(self):
         cursor = self.connection.cursor()
         cursor.execute("DROP TABLE {}".format(self.equip_class_table_name))
-        cursor.execute("DROP TABLE {}".format(self.equip_depends_table_name))
+        cursor.execute("DROP TABLE {}".format(self.equip_class_depends_table_name))
         cursor.execute("DROP TABLE {}".format(self.prod_class_table_name))
-        cursor.execute("DROP TABLE {}".format(self.prod_depends_table_name))
+        cursor.execute("DROP TABLE {}".format(self.prod_class_depends_table_name))
         self.connection.commit()
         cursor.close()
 
@@ -198,11 +198,11 @@ class PrintHandler():
     def __init__(self):
         pass
 
-    def handle_equip(self, etype, eid, depend_eids=None):
-        print("eid:{}, etype:{}, depends:{}".format(etype, eid, ",".join(depend_eids)))
+    def handle_equip_class(self, type, ec_id, depend_ec_ids=None):
+        print("ec_id:{}, type:{}, depends:{}".format(type, ec_id, ",".join(depend_ec_ids)))
 
-    def handle_prod(self, ptype, pid, depend_eids=None):
-        print("pid:{}, ptype:{}, depends_eids:{}".format(ptype, pid, ",".join(depend_eids)))
+    def handle_prod_class(self, type, pc_id, depend_ecids=None):
+        print("pc_id:{}, type:{}, depends_ecids:{}".format(type, pc_id, ",".join(depend_ecids)))
 
 
 class CollectHandler():
@@ -210,12 +210,19 @@ class CollectHandler():
         self.equip_collect_list = []
         self.prod_collect_list = []
 
-    def handle_equip(self, etype, eid, depend_eids=None):
-        d = {'etype':etype, 'eid':eid, 'depend_eids':depend_eids}
+    def handle_equip_class(self, type, ecid, depend_ecids=None):
+        d = {'type':type, 'ecid':ecid, 'depend_ecids':depend_ecids}
         self.equip_collect_list.append(d)
 
-    def handle_prod(self, ptype, pid, depend_eids=None):
-        d = {'ptype':ptype, 'pid':pid, 'depend_eids':depend_eids}
+    def handle_prod_class(self, type, pc_id, depend_ecids=None):
+        d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
         self.prod_collect_list.append(d)
 
+    def handle_store_class(self, type, pc_id, depend_ecids=None):
+        d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
+        self.prod_collect_list.append(d)
+
+    def handle_store(self, type, pc_id, depend_ecids=None):
+        d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
+        self.prod_collect_list.append(d)
 

@@ -1,0 +1,25 @@
+{
+  "manifest": "initial load",
+  "stores": [
+    {
+      "type": "store",
+      "class": "store-default",
+      "s_id": "store-1"
+    },
+    {
+      "type": "store",
+      "class": "store-default",
+      "s_id": "store-2"
+    },
+    {
+      "type": "store",
+      "class": "store-default",
+      "s_id": "store-3"
+    },
+    {
+      "type": "store",
+      "class": "store-default",
+      "s_id": "store-4"
+    }
+  ]
+}

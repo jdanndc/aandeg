@@ -2,103 +2,103 @@
   "manifest": "initial load",
   "equip-classes": [
     {
-      "etype": "equip-class",
-      "eid": "water-supply"
+      "type": "equip-class",
+      "ec_id": "water-supply"
     },
     {
-      "etype": "equip-class",
-      "eid": "water-main",
+      "type": "equip-class",
+      "ec_id": "water-main",
       "depends": [
         "water-supply"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "water-circuit",
+      "type": "equip-class",
+      "ec_id": "water-circuit",
       "depends": [
         "water-main"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "water-outlet",
+      "type": "equip-class",
+      "ec_id": "water-outlet",
       "depends": [
         "water-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-water-filtration",
+      "type": "equip-class",
+      "ec_id": "device-water-filtration",
       "depends": [
         "water-outlet"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "elec-supply"
+      "type": "equip-class",
+      "ec_id": "elec-supply"
     },
     {
-      "etype": "equip-class",
-      "eid": "elec-main",
+      "type": "equip-class",
+      "ec_id": "elec-main",
       "depends": [
         "elec-supply"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "elec-circuit",
+      "type": "equip-class",
+      "ec_id": "elec-circuit",
       "depends": [
         "elec-main"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "elec-outlet",
+      "type": "equip-class",
+      "ec_id": "elec-outlet",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-ice-maker",
+      "type": "equip-class",
+      "ec_id": "device-ice-maker",
       "depends": [
         "elec-circuit",
         "device-water-filtration"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-dishwasher",
+      "type": "equip-class",
+      "ec_id": "device-dishwasher",
       "depends": [
         "elec-circuit",
         "water-outlet"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-hvac",
+      "type": "equip-class",
+      "ec_id": "device-hvac",
       "depends": [
         "elec-main"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-water-heater",
+      "type": "equip-class",
+      "ec_id": "device-water-heater",
       "depends": [
         "elec-main",
         "water-main"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-co2-delivery",
+      "type": "equip-class",
+      "ec_id": "device-co2-delivery",
       "depends": [
         "co2-main"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-fountain-soda",
+      "type": "equip-class",
+      "ec_id": "device-fountain-soda",
       "depends": [
         "device-water-filtration",
         "device-co2-delivery",
@@ -106,8 +106,8 @@
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "store-open",
+      "type": "equip-class",
+      "ec_id": "store-open",
       "depends": [
         "device-hvac",
         "device-water-heater",
@@ -115,57 +115,57 @@
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-oven",
+      "type": "equip-class",
+      "ec_id": "device-oven",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-fridge-prep",
+      "type": "equip-class",
+      "ec_id": "device-fridge-prep",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-fridge-beverage",
+      "type": "equip-class",
+      "ec_id": "device-fridge-beverage",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-warmer-queso",
+      "type": "equip-class",
+      "ec_id": "device-warmer-queso",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-warmer-fudge",
+      "type": "equip-class",
+      "ec_id": "device-warmer-fudge",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-warming-window",
+      "type": "equip-class",
+      "ec_id": "device-warming-window",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-cold-prep",
+      "type": "equip-class",
+      "ec_id": "device-cold-prep",
       "depends": [
         "elec-circuit"
       ]
     },
     {
-      "etype": "equip-class",
-      "eid": "device-icecream-machine",
+      "type": "equip-class",
+      "ec_id": "device-icecream-machine",
       "depends": [
         "device-water-filtration",
         "elec-circuit"
