@@ -14,12 +14,16 @@ class PostgresHandler(object):
         self.equip_class_depends_table_name = 'equip_class_depends'
         self.prod_class_table_name = 'prod_class'
         self.prod_class_depends_table_name = 'prod_class_depends'
+        self.store_class_table_name = 'store_class'
+        self.store_table_name = 'store'
         self.drop_equip_table_on_exit = False
         if table_suffix:
             self.equip_class_table_name = self.equip_class_table_name + table_suffix
             self.equip_class_depends_table_name = self.equip_class_depends_table_name + table_suffix
             self.prod_class_table_name = self.prod_class_table_name + table_suffix
             self.prod_class_depends_table_name = self.prod_class_depends_table_name + table_suffix
+            self.store_class_table_name = self.store_class_table_name + table_suffix
+            self.store_table_name = self.store_table_name + table_suffix
         self.connection = None
 
     def table_exists(self, table_name):
@@ -28,7 +32,7 @@ class PostgresHandler(object):
         b = cursor.fetchone()[0]
         return b
 
-    def create_equip_table(self):
+    def create_equip_class_table(self):
         cursor = self.connection.cursor()
         cursor.execute(
             """ CREATE TABLE {} (
@@ -48,7 +52,7 @@ class PostgresHandler(object):
             """ CREATE TABLE {} (
                     ec_id VARCHAR(128) NOT NULL,
                     ec_id_parent VARCHAR(128) NOT NULL,
-                    depend_type VARCHAR(8) NOT NULL
+                    depend_type VARCHAR(32) NOT NULL
                     )
             """.format(self.equip_class_depends_table_name))
         cursor.close()
@@ -59,7 +63,7 @@ class PostgresHandler(object):
         cursor.execute(
             """ CREATE TABLE {} (
                     pc_id VARCHAR(128) PRIMARY KEY,
-                    type VARCHAR(128) NOT NULL
+                    type VARCHAR(32) NOT NULL
                     )
             """.format(self.prod_class_table_name))
         cursor.close()
@@ -74,9 +78,32 @@ class PostgresHandler(object):
             """ CREATE TABLE {} (
                     pc_id VARCHAR(128) NOT NULL,
                     ec_id_parent VARCHAR(128) NOT NULL,
-                    depend_type VARCHAR(8) NOT NULL
+                    depend_type VARCHAR(32) NOT NULL
                     )
             """.format(self.prod_class_depends_table_name))
+        cursor.close()
+        self.connection.commit()
+
+    def create_store_class_table(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            """ CREATE TABLE {} (
+                    sc_id VARCHAR(128) NOT NULL,
+                    type VARCHAR(32) NOT NULL
+                    )
+            """.format(self.store_class_table_name))
+        cursor.close()
+        self.connection.commit()
+
+    def create_store_table(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            """ CREATE TABLE {} (
+                    s_id VARCHAR(128) NOT NULL,
+                    sc_id VARCHAR(128) NOT NULL,
+                    type VARCHAR(32) NOT NULL
+                    )
+            """.format(self.store_table_name))
         cursor.close()
         self.connection.commit()
 
@@ -84,13 +111,17 @@ class PostgresHandler(object):
         self.connection = create_connection(self.db_name, self.db_user, self.db_password, self.db_host, self.db_port)
         # create equip table if does not exist
         if not self.table_exists(self.equip_class_table_name):
-            self.create_equip_table()
+            self.create_equip_class_table()
         if not self.table_exists(self.equip_class_depends_table_name):
             self.create_equip_class_depends_table()
         if not self.table_exists(self.prod_class_table_name):
             self.create_prod_table()
         if not self.table_exists(self.prod_class_depends_table_name):
             self.create_prod_class_depends_table()
+        if not self.table_exists(self.store_class_table_name):
+            self.create_store_class_table()
+        if not self.table_exists(self.store_table_name):
+            self.create_store_table()
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
@@ -117,15 +148,25 @@ class PostgresHandler(object):
         self.connection.commit()
 
     def handle_prod_class(self, type, pc_id, depend_ec_ids=None):
-        # TODO: check that ec_id exists before inserting into the depends table
+        # todo: check that ec_id exists before inserting into the depends table
         cursor = self.connection.cursor()
         cursor.execute(""" INSERT INTO {}(pc_id,type) VALUES(%s, %s) """.format(self.prod_class_table_name), (pc_id, type))
         if depend_ec_ids is not None:
             for depend in depend_ec_ids:
-                # TODO: confirm that the ec_id for depend exists in equip_class table
+                # todo: confirm that the ec_id for depend exists in equip_class table
                 #  was previously checked during json parsing, but disabled to allow for update
                 pass
                 cursor.execute(""" INSERT INTO {}(pc_id,ec_id_parent,depend_type) VALUES(%s, %s, %s) """.format(self.prod_class_depends_table_name), (pc_id, depend, 'defined'))
+        self.connection.commit()
+
+    def handle_store_class(self, type, sc_id):
+        cursor = self.connection.cursor()
+        cursor.execute(""" INSERT INTO {}(type, sc_id) VALUES(%s, %s) """.format(self.store_class_table_name), (type, sc_id))
+        self.connection.commit()
+
+    def handle_store(self, type, s_id, sc_id):
+        cursor = self.connection.cursor()
+        cursor.execute(""" INSERT INTO {}(type, sc_id, s_id) VALUES(%s, %s, %s) """.format(self.store_table_name), (type, sc_id, s_id))
         self.connection.commit()
 
     def _add_depend_pairs_to_set(self, ec_id, all_depend_pairs, add_pair_for_self=True):
@@ -180,6 +221,8 @@ class PostgresHandler(object):
         cursor.execute("DROP TABLE {}".format(self.equip_class_depends_table_name))
         cursor.execute("DROP TABLE {}".format(self.prod_class_table_name))
         cursor.execute("DROP TABLE {}".format(self.prod_class_depends_table_name))
+        cursor.execute("DROP TABLE {}".format(self.store_class_table_name))
+        cursor.execute("DROP TABLE {}".format(self.store_table_name))
         self.connection.commit()
         cursor.close()
 
@@ -194,35 +237,26 @@ class PostgresHandler(object):
         cursor.close()
 
 
-class PrintHandler():
-    def __init__(self):
-        pass
-
-    def handle_equip_class(self, type, ec_id, depend_ec_ids=None):
-        print("ec_id:{}, type:{}, depends:{}".format(type, ec_id, ",".join(depend_ec_ids)))
-
-    def handle_prod_class(self, type, pc_id, depend_ecids=None):
-        print("pc_id:{}, type:{}, depends_ecids:{}".format(type, pc_id, ",".join(depend_ecids)))
-
-
 class CollectHandler():
     def __init__(self):
-        self.equip_collect_list = []
-        self.prod_collect_list = []
+        self.equip_class_collect_list = []
+        self.prod_class_collect_list = []
+        self.store_class_collect_list = []
+        self.store_collect_list = []
 
     def handle_equip_class(self, type, ecid, depend_ecids=None):
         d = {'type':type, 'ecid':ecid, 'depend_ecids':depend_ecids}
-        self.equip_collect_list.append(d)
+        self.equip_class_collect_list.append(d)
 
     def handle_prod_class(self, type, pc_id, depend_ecids=None):
         d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
-        self.prod_collect_list.append(d)
+        self.prod_class_collect_list.append(d)
 
-    def handle_store_class(self, type, pc_id, depend_ecids=None):
-        d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
-        self.prod_collect_list.append(d)
+    def handle_store_class(self, type, sc_id):
+        d = {'type':type, 'sc_id':sc_id}
+        self.store_class_collect_list.append(d)
 
-    def handle_store(self, type, pc_id, depend_ecids=None):
-        d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
-        self.prod_collect_list.append(d)
+    def handle_store(self, type, s_id, sc_id):
+        d = {'type':type, 's_id':s_id, 'sc_id':sc_id}
+        self.store_collect_list.append(d)
 

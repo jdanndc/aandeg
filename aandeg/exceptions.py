@@ -3,7 +3,7 @@ class MissingDataError(Exception):
     pass
 
 
-class DuplicateEcIdError(Exception):
+class DuplicateIdError(Exception):
     pass
 
 

@@ -1,11 +1,8 @@
-from aandeg.handlers import PrintHandler, CollectHandler, PostgresHandler
-from aandeg.read_json import read_equip_data_json
+from aandeg.handlers import CollectHandler, PostgresHandler
+from aandeg.read_json import read_equip_class_data_json
 from aandeg.aandeg_util import make_timestamp
 
 def test_read_equip_data():
-    filename = "../data/equip_class.json"
-    ph = PrintHandler()
-    read_equip_data_json(filename, ph, is_filename=True)
     str = """
     {
         "manifest": "initial load",
@@ -24,12 +21,12 @@ def test_read_equip_data():
         ]
     }
     """
-    read_equip_data_json(str, ph)
     ch = CollectHandler()
-    read_equip_data_json(str, ch)
-    assert(len(ch.equip_collect_list) == 2)
+    read_equip_class_data_json(str, ch)
+    assert(len(ch.equip_class_collect_list) == 2)
     temp = '_' + make_timestamp()
+    filename = "../data/equip_class.json"
     with PostgresHandler("aandeg", "jdann", "", "localhost", 5432, table_suffix=temp) as pgm:
-        read_equip_data_json(filename, pgm, is_filename=True)
+        read_equip_class_data_json(filename, pgm, is_filename=True)
         pgm.update_imputed_depends()
 
