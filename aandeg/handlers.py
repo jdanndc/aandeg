@@ -46,6 +46,7 @@ class PostgresHandler(BaseHandler):
         sp = cursor.fetchone()[0]
         self.connection.commit()
 
+    # ASSUMPTION: expectation is to use this class as a context manager, in a with statement
     def __enter__(self):
         self.connection = create_connection(self.db_name, self.db_user, self.db_password, self.db_host, self.db_port)
         if self.is_testing:
@@ -54,6 +55,7 @@ class PostgresHandler(BaseHandler):
         self.create_tables()
         if self.is_testing:
             cursor = self.connection.cursor()
+            # for testing only, get the real name of the pg_temp table that the test is writing to
             cursor.execute("SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()")
             self.pg_temp_table = cursor.fetchone()[0]
         return self
@@ -61,8 +63,8 @@ class PostgresHandler(BaseHandler):
     def __exit__(self, exc_type, exc_value, tb):
         if exc_type is not None:
             traceback.print_exception(exc_type, exc_value, tb)
-            return False
             # return False in order to let exception pass through
+            return False
         self.connection.close()
         return True
 
@@ -175,22 +177,25 @@ class PostgresHandler(BaseHandler):
 
     def clear_store_incidents(self, s_id):
         cursor = self.connection.cursor()
-        cursor.execute(
-            """DELETE FROM incident_report WHERE s_id = %s""", (s_id,))
+        cursor.execute( """DELETE FROM incident_report WHERE s_id = %s""", (s_id,))
         self.connection.commit()
         cursor.close()
 
     def clear_incident(self, i_id):
         cursor = self.connection.cursor()
-        cursor.execute(
-            """DELETE FROM incident_report WHERE id = %s""", (i_id,))
+        cursor.execute( """DELETE FROM incident_report WHERE id = %s""", (i_id,))
         self.connection.commit()
         cursor.close()
 
     def get_store_incidents(self, s_id):
         cursor = self.connection.cursor()
-        cursor.execute(
-            """SELECT * FROM incident_report WHERE s_id = %s""", (s_id,))
+        cursor.execute( """SELECT * FROM incident_report WHERE s_id = %s""", (s_id,))
+        return cursor.fetchall()
+
+    def list_table(self, table_name):
+        # TODO: beware SQL injection here
+        cursor = self.connection.cursor()
+        cursor.execute( """SELECT * FROM {}""".format(table_name))
         return cursor.fetchall()
 
     def get_all_store_products(self, s_id):

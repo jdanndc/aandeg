@@ -3,9 +3,7 @@ from decimal import Decimal
 from aandeg.exceptions import MissingDataError, DuplicateIdError, UnknownDependsError
 from aandeg.handlers import BaseHandler
 
-# TODO:
-#  when building this file, feels like we could use some polymorphism.  consider for later
-
+# TODO: these methods could be be tightened up
 # read json from either a string or a file, depending on is_filename flag
 def get_json_data(fn_or_json, is_filename):
     json_data = None
