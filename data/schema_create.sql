@@ -45,4 +45,6 @@ CREATE TABLE IF NOT EXISTS incident_report (
     description VARCHAR(256) NOT NULL
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS idx_incident ON incident_report(s_id, ec_id);
+
 

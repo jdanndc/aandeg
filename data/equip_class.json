@@ -46,16 +46,16 @@
     },
     {
       "type": "equip-class",
-      "ec_id": "elec-circuit",
+      "ec_id": "elec-panel",
       "depends": [
         "elec-main"
       ]
     },
     {
       "type": "equip-class",
-      "ec_id": "elec-outlet",
+      "ec_id": "elec-circuit",
       "depends": [
-        "elec-circuit"
+        "elec-panel"
       ]
     },
     {
@@ -78,14 +78,14 @@
       "type": "equip-class",
       "ec_id": "device-hvac",
       "depends": [
-        "elec-main"
+        "elec-panel"
       ]
     },
     {
       "type": "equip-class",
       "ec_id": "device-water-heater",
       "depends": [
-        "elec-main",
+        "elec-panel",
         "water-main"
       ]
     },
@@ -102,7 +102,7 @@
       "depends": [
         "device-water-filtration",
         "device-co2-delivery",
-        "elec-outlet"
+        "elec-circuit"
       ]
     },
     {
@@ -118,7 +118,7 @@
       "type": "equip-class",
       "ec_id": "device-oven",
       "depends": [
-        "elec-circuit"
+        "elec-panel"
       ]
     },
     {

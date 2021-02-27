@@ -1,29 +1,7 @@
 import psycopg2
-import json
 from os import path
 from psycopg2 import OperationalError
-from datetime import datetime
 
-
-class aandeg_config():
-    def __init__(self, filename='.aandeg.json'):
-        self.config_data = None
-        with open('.aandeg.json') as json_file:
-            self.config_data = json.load(json_file)
-
-    def get_args(self):
-        ret = [None, None, None, None, None]
-        if (self.config_data is not None):
-            dbinfo = self.config_data.get('dbinfo')
-            if dbinfo is not None:
-                ret = []
-                for k in ['db_name', 'db_user', 'db_pass', 'db_host', 'db_port']:
-                    ret.append(dbinfo.get(k))
-        return ret
-
-def make_timestamp():
-    now = datetime.now()
-    return now.strftime("%Y_%m_%d_%H_%M_%S")
 
 def file_to_json_data(filename):
     data = None

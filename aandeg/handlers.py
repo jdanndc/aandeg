@@ -37,10 +37,14 @@ class PostgresHandler(BaseHandler):
         self.db_port = db_port
         self.connection = None
         self.is_testing = is_testing
+        self.pg_temp_table = None
 
     def create_tables(self):
         cursor = self.connection.cursor()
         cursor.execute(open('data/schema_create.sql', 'r').read())
+        cursor.execute("SHOW search_path")
+        sp = cursor.fetchone()[0]
+        self.connection.commit()
 
     def __enter__(self):
         self.connection = create_connection(self.db_name, self.db_user, self.db_password, self.db_host, self.db_port)
@@ -48,6 +52,10 @@ class PostgresHandler(BaseHandler):
             cursor = self.connection.cursor()
             cursor.execute("""SET search_path TO pg_temp""")
         self.create_tables()
+        if self.is_testing:
+            cursor = self.connection.cursor()
+            cursor.execute("SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()")
+            self.pg_temp_table = cursor.fetchone()[0]
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
@@ -72,14 +80,13 @@ class PostgresHandler(BaseHandler):
         self.connection.commit()
 
     def handle_prod_class(self, type, pc_id, depend_ec_ids=None):
-        # todo: check that ec_id exists before inserting into the depends table
+        # TODO: check that ec_id exists before inserting into the depends table
         cursor = self.connection.cursor()
         cursor.execute(""" INSERT INTO prod_class(pc_id,type) VALUES(%s, %s) """, (pc_id, type))
         if depend_ec_ids is not None:
             for depend in depend_ec_ids:
                 # todo: confirm that the ec_id for depend exists in equip_class table
                 #  was previously checked during json parsing, but disabled to allow for update
-                pass
                 cursor.execute(""" INSERT INTO prod_class_depends(pc_id,ec_id_parent,depend_type) VALUES(%s, %s, %s)""",
                                (pc_id, depend, EC_DEPEND_TYPE_DEFINED))
         self.connection.commit()
@@ -147,11 +154,21 @@ class PostgresHandler(BaseHandler):
         cursor.close()
 
     def create_incident_report(self, s_id, ec_id, itype=INCIDENT_REPORT_TYPE_FAIL, description=""):
+        # TODO: add a trigger, for now, just check values with a select
         cursor = self.connection.cursor()
-        cursor.execute(
-            """INSERT INTO incident_report(s_id, ec_id, type, description) VALUES(%s, %s, %s, %s) RETURNING id""",
-            (s_id, ec_id, itype, description))
-        id_of_new_row = cursor.fetchone()[0]
+        cursor.execute("""
+            INSERT INTO incident_report(s_id, ec_id, type, description) 
+            SELECT 
+                (SELECT s_id FROM store WHERE s_id = %s),
+                (SELECT ec_id FROM equip_class WHERE ec_id = %s),
+                %s, %s  
+            RETURNING ID
+            """, (s_id, ec_id, itype, description)
+        )
+        id_of_new_row = None
+        ff = cursor.fetchone()
+        if len(ff) > 0:
+            id_of_new_row = ff[0]
         self.connection.commit()
         cursor.close()
         return id_of_new_row
@@ -169,6 +186,12 @@ class PostgresHandler(BaseHandler):
             """DELETE FROM incident_report WHERE id = %s""", (i_id,))
         self.connection.commit()
         cursor.close()
+
+    def get_store_incidents(self, s_id):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            """SELECT * FROM incident_report WHERE s_id = %s""", (s_id,))
+        return cursor.fetchall()
 
     def get_all_store_products(self, s_id):
         cursor = self.connection.cursor()
@@ -231,9 +254,11 @@ class PostgresHandler(BaseHandler):
 
     def drop_tables(self):
         cursor = self.connection.cursor()
-        cursor.execute(open('data/schema_drop.sql', 'r').read())
+        cursor.execute(open('./data/schema_drop.sql', 'r').read())
+        self.connection.commit()
         return self
 
+    # drops all tables in the schema
     def drop_all_tables(self):
         cursor = self.connection.cursor()
         cursor.execute(
