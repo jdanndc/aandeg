@@ -1,9 +1,11 @@
-from aandeg.administer import Administer
 from aandeg.util.config import Config
+from aandeg.util.dbutil import create_tables, drop_tables
 
 
 def lambda_handler(event, context):
-    Administer(context.get("conn")).update_imputed_depends()
+    conn = context.get("conn")
+    drop_tables(conn)
+    create_tables(conn)
 
 
 if __name__ == "__main__":

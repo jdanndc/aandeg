@@ -1,13 +1,12 @@
 import sys, getopt
-from aandeg.util import file_to_json_data
-from aandeg.config import Config, args_from_context
-from handler.postgres import PostgresHandler
-from aandeg.read_json import read_store_class_data_json
+from aandeg.util.config import Config
+from aandeg.data_handler.postgres import PostgresHandler
+from aandeg.util.read_json import read_store_class_data_json, file_to_json_data
 
 
 def lambda_handler(event, context):
-    with PostgresHandler(*args_from_context(context)) as pgm:
-        read_store_class_data_json(event.get("payload"), pgm, is_filename=False)
+    with PostgresHandler(context.get("conn")) as pgh:
+        read_store_class_data_json(event.get("payload"), pgh, is_filename=False)
 
 
 if __name__ == "__main__":
@@ -22,4 +21,4 @@ if __name__ == "__main__":
 
     data = file_to_json_data(filename)
     event = {'payload': data}
-    lambda_handler(event, Config())
+    lambda_handler(event, { "conn" : Config().connection()})

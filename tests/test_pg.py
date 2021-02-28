@@ -1,4 +1,4 @@
-from util import create_connection
+from aandeg.util.dbutil import create_connection
 
 
 def test_connect():

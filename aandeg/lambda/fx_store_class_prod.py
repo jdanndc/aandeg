@@ -1,12 +1,11 @@
-from handler.postgres import PostgresHandler
-from aandeg.config import Config, args_from_context
+from aandeg.util.config import Config
+from aandeg.administer import Administer
 
 
 def lambda_handler(event, context):
-    with PostgresHandler(*args_from_context(context)) as pgm:
-        pgm.update_store_classes_with_all_products()
+    Administer(context.get("conn")).update_store_classes_with_all_products()
 
 
 if __name__ == "__main__":
-    lambda_handler(None, Config())
+    lambda_handler(None, { "conn" : Config().connection()})
 

@@ -1,4 +1,4 @@
-from handler.base import BaseHandler
+from data_handler.base import BaseHandler
 
 
 class CollectHandler(BaseHandler):

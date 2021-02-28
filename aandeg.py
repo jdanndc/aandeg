@@ -1,5 +1,5 @@
-from aandeg.config import Config
-from handler.postgres import PostgresHandler
+from aandeg.util.config import Config
+from aandeg.administer import Administer
 from optparse import OptionParser
 
 
@@ -20,34 +20,34 @@ if __name__ == "__main__":
     parser.add_option('-Q', '--list-equip-depend', action='store_true', dest="list_equip_depend")
     (opt, args) = parser.parse_args()
 
-    with PostgresHandler(*Config().get_args()) as pgh:
-        if opt.list_equip:
-            print(*pgh.list_table('equip_class'), sep='\n')
-        elif opt.list_stores:
-            print(*pgh.list_table('store_class'), sep='\n')
-        elif opt.list_prod:
-            print(*pgh.list_table('prod_class'), sep='\n')
-        elif opt.list_equip_depend:
-            print(*pgh.list_table('equip_class_depends'), sep='\n')
-        elif opt.list_prod_depend:
-            print(*pgh.list_table('prod_class_depends'), sep='\n')
-        elif opt.store:
-            if opt.is_incident:
-                if opt.equip:
-                    pgh.create_incident_report(opt.store, opt.equip)
-                elif opt.incident_clear_id is not None:
-                    pgh.clear_incident(opt.incident_clear_id)
-                elif opt.incident_clear_all:
-                    pgh.clear_store_incidents(opt.store)
-                print(*pgh.get_store_incidents(opt.store), sep='\n')
-            elif opt.show_store_open:
-                print("open={}".format(pgh.store_is_open(opt.store)))
-            elif opt.show_available:
-                print(*pgh.get_available_store_products(opt.store), sep='\n')
-            elif opt.show_unavailable:
-                print(*pgh.get_unavailable_store_products(opt.store), sep='\n')
-        elif opt.is_incident:
-            print(*pgh.list_table('incident_report'), sep='\n')
+    admin = Administer(Config().connection())
+    if opt.list_equip:
+        print(*admin.list_table('equip_class'), sep='\n')
+    elif opt.list_stores:
+        print(*admin.list_table('store'), sep='\n')
+    elif opt.list_prod:
+        print(*admin.list_table('prod_class'), sep='\n')
+    elif opt.list_equip_depend:
+        print(*admin.list_table('equip_class_depends'), sep='\n')
+    elif opt.list_prod_depend:
+        print(*admin.list_table('prod_class_depends'), sep='\n')
+    elif opt.store:
+        if opt.is_incident:
+            if opt.equip:
+                admin.create_incident_report(opt.store, opt.equip)
+            elif opt.incident_clear_id is not None:
+                admin.clear_incident(opt.incident_clear_id)
+            elif opt.incident_clear_all:
+                admin.clear_store_incidents(opt.store)
+            print(*admin.get_store_incidents(opt.store), sep='\n')
+        elif opt.show_store_open:
+            print("open={}".format(admin.store_is_open(opt.store)))
+        elif opt.show_available:
+            print(*admin.get_available_store_products(opt.store), sep='\n')
+        elif opt.show_unavailable:
+            print(*admin.get_unavailable_store_products(opt.store), sep='\n')
+    elif opt.is_incident:
+        print(*admin.list_table('incident_report'), sep='\n')
 
     pass
 

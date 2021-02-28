@@ -1,4 +1,4 @@
-from aandeg.config import Config
+from aandeg.util.config import Config
 
 
 def test_aandeg_config():
