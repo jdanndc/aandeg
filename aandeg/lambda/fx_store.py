@@ -1,5 +1,5 @@
 import sys, getopt
-from aandeg.config import config, args_from_context
+from aandeg.config import Config, args_from_context
 from aandeg.util import file_to_json_data
 from handler.postgres import PostgresHandler
 from aandeg.read_json import read_store_data_json
@@ -22,4 +22,4 @@ if __name__ == "__main__":
 
     data = file_to_json_data(filename)
     event = {'payload': data}
-    lambda_handler(event, config())
+    lambda_handler(event, Config())

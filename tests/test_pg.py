@@ -1,5 +1,6 @@
 from util import create_connection
 
+
 def test_connect():
     db_name = 'aandeg'
     db_user = 'jdann'

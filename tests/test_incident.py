@@ -1,6 +1,7 @@
-from aandeg.config import config
+from aandeg.config import Config
 from handler.postgres import PostgresHandler
 from read_json import read_equip_class_data_json, read_prod_class_data_json, read_store_class_data_json, read_store_data_json
+
 
 # testing helper method
 # is_testing=True, so all actions within the scope of the context manager write to the same unique temp schema
@@ -14,7 +15,7 @@ def prepare_for_incident_test(pgm: PostgresHandler):
 
 
 def test_incident():
-    with PostgresHandler(*config().get_args(), is_testing=True) as pgm:
+    with PostgresHandler(*Config().get_args(), is_testing=True) as pgm:
         prepare_for_incident_test(pgm)
         s_id = 'store_1'
         pgm.clear_store_incidents(s_id)
@@ -30,8 +31,9 @@ def test_incident():
         for sp in pgm.get_available_store_products(s_id):
             print(sp)
 
+
 def test_store_is_open():
-    with PostgresHandler(*config().get_args(), is_testing=True) as pgm:
+    with PostgresHandler(*Config().get_args(), is_testing=True) as pgm:
         prepare_for_incident_test(pgm)
         s_id = 'store_1'
         pgm.clear_store_incidents(s_id)

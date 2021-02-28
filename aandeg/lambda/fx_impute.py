@@ -1,5 +1,5 @@
 from handler.postgres import PostgresHandler
-from aandeg.config import config, args_from_context
+from aandeg.config import Config, args_from_context
 
 
 def lambda_handler(event, context):
@@ -8,5 +8,5 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-    lambda_handler(None, config())
+    lambda_handler(None, Config())
 

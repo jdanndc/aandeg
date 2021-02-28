@@ -1,4 +1,4 @@
-from aandeg.config import config
+from aandeg.config import Config
 from handler.postgres import PostgresHandler
 from optparse import OptionParser
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser.add_option('-Q', '--list-equip-depend', action='store_true', dest="list_equip_depend")
     (opt, args) = parser.parse_args()
 
-    with PostgresHandler(*config().get_args()) as pgh:
+    with PostgresHandler(*Config().get_args()) as pgh:
         if opt.list_equip:
             print(*pgh.list_table('equip_class'), sep='\n')
         elif opt.list_stores:

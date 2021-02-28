@@ -1,7 +1,7 @@
 from handler.postgres import PostgresHandler
 from handler.collect import CollectHandler
 from aandeg.read_json import read_prod_class_data_json
-from aandeg.config import config
+from aandeg.config import Config
 
 test_json_str = """
 {
@@ -39,13 +39,15 @@ def test_read_prod_string():
     assert(len(ch.prod_class_collect_list[0].get('depend_ecids')) == 3)
     assert(len(ch.prod_class_collect_list[1].get('depend_ecids')) == 2)
 
+
 def test_read_prod_file():
     # just make sure we can read the file without errors
     ch = CollectHandler()
     read_prod_class_data_json("./data/product_class.json", ch, is_filename=True)
 
+
 def test_read_prod_db_handler():
-    with PostgresHandler(*config().get_args(), is_testing=True) as pgm:
+    with PostgresHandler(*Config().get_args(), is_testing=True) as pgm:
         read_prod_class_data_json(test_json_str, pgm, is_filename=False)
         cursor = pgm.connection.cursor()
         cursor.execute("""SELECT * FROM prod_class""")

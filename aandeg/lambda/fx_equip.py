@@ -1,5 +1,5 @@
 import sys, getopt
-from config import config, args_from_context
+from config import Config, args_from_context
 from util import file_to_json_data
 from handler.postgres import PostgresHandler
 from aandeg.read_json import read_equip_class_data_json
@@ -22,4 +22,4 @@ if __name__ == "__main__":
 
     data = file_to_json_data(filename)
     event = {'payload': data}
-    lambda_handler(event, config())
+    lambda_handler(event, Config())

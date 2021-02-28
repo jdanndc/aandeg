@@ -4,6 +4,7 @@ from aandeg.util import create_connection
 from handler.base import BaseHandler
 from handler.base import EC_DEPEND_TYPE_DEFINED, EC_DEPEND_TYPE_IMPUTED, INCIDENT_REPORT_TYPE_FAIL,  STORE_OPEN_EQUIP_ID
 
+
 # TODO:
 # create a class RDBHandler(BaseHandler)
 # that handles all the common RDB functionality between AWS RDS and local Postgres
@@ -174,7 +175,6 @@ class PostgresHandler(BaseHandler):
         """, (s_id,))
         self.connection.commit()
         return cursor.fetchall()
-
 
     def get_unavailable_store_products(self, s_id):
         if not self.store_is_open(s_id):

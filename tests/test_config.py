@@ -1,7 +1,8 @@
-from aandeg.config import config
+from aandeg.config import Config
+
 
 def test_aandeg_config():
-    c = config()
+    c = Config()
     assert(c is not None)
     assert(len(c.get_args()) == 5)
     assert(c.get_args()[0] is not None)

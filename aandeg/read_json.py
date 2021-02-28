@@ -16,22 +16,28 @@ def get_json_data(fn_or_json, is_filename):
     return json_data
 
 
+def check_keys(dict_to_check, keys, name="dict"):
+    for attr in keys:
+        if not dict_to_check.get(attr):
+            raise MissingDataError("{} missing '{}' attribute".format(name, attr))
+
+
+def check_duplicate(key, seen_set, name="key"):
+    if key in seen_set:
+        raise DuplicateIdError("duplicate {}: '{}".format(name, key))
+
+
 def read_equip_class_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
     assert(isinstance(handler, BaseHandler))
     equip_class_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "equip_classes"]:
-        if not equip_class_data.get(attr):
-            raise MissingDataError("equip_classes missing '{}' attribute".format(attr))
+    check_keys(equip_class_data, ["manifest", "equip_classes"], "equip_classes")
     seen_depends = set()
     seen_ec_id = set()
     for equip_class in equip_class_data.get("equip_classes"):
-        for attr in ["type", "ec_id"]:
-            if not equip_class.get(attr):
-                raise MissingDataError("equip_class missing '{}' attribute".format(attr))
+        check_keys(equip_class, ["type", "ec_id"], "equip_class")
         ec_id = equip_class.get('ec_id')
         type = equip_class.get('type')
-        if ec_id in seen_ec_id:
-            raise DuplicateIdError("duplicate ec_id: '{}".format(ec_id))
+        check_duplicate(ec_id, seen_ec_id, "ec_id")
         depends = []
         if equip_class.get('depends'):
             for depend in equip_class.get('depends'):
@@ -46,19 +52,14 @@ def read_equip_class_data_json(fn_or_json, handler, is_filename=False, check_dep
 def read_prod_class_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
     assert(isinstance(handler, BaseHandler))
     prod_class_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "product_classes"]:
-        if not prod_class_data.get(attr):
-            raise MissingDataError("product_classes missing '{}' attribute".format(attr))
+    check_keys(prod_class_data, ["manifest", "product_classes"], "product_classes")
     # check for local duplicates
     seen_pc_id = set()
     for prod_class in prod_class_data.get("product_classes"):
-        for attr in ["type", "pc_id"]:
-            if not prod_class.get(attr):
-                raise MissingDataError("product_class missing '{}' attribute".format(attr))
+        check_keys(prod_class, ["type", "pc_id"], "product_class")
         pc_id = prod_class.get('pc_id')
         type = prod_class.get('type')
-        if pc_id in seen_pc_id:
-            raise DuplicateIdError("duplicate pc_id: '{}".format(pc_id))
+        check_duplicate(pc_id, seen_pc_id, "pc_id")
         depends = []
         if prod_class.get('equip_class_depends'):
             for depend in prod_class.get('equip_class_depends'):
@@ -66,40 +67,32 @@ def read_prod_class_data_json(fn_or_json, handler, is_filename=False, check_depe
         if handler:
             handler.handle_prod_class(type, pc_id, depends)
 
+
 def read_store_class_data_json(fn_or_json, handler, is_filename=False):
     assert(isinstance(handler, BaseHandler))
     store_class_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "store_classes"]:
-        if not store_class_data.get(attr):
-            raise MissingDataError("store_classes missing '{}' attribute".format(attr))
+    check_keys(store_class_data, ["manifest", "store_classes"], "store_classes")
     seen_sc_id = set()
     for store_class in store_class_data.get("store_classes"):
-        for attr in ["type", "sc_id"]:
-            if not store_class.get(attr):
-                raise MissingDataError("store_class missing '{}' attribute".format(attr))
+        check_keys(store_class, ["type", "sc_id"], "store_class")
         sc_id = store_class.get('sc_id')
         type = store_class.get('type')
-        if sc_id in seen_sc_id:
-            raise DuplicateIdError("duplicate sc_id: '{}".format(sc_id))
+        check_duplicate(sc_id, seen_sc_id, "sc_id")
         if handler:
             handler.handle_store_class(type, sc_id)
+
 
 def read_store_data_json(fn_or_json, handler, is_filename=False):
     assert(isinstance(handler, BaseHandler))
     store_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "stores"]:
-        if not store_data.get(attr):
-            raise MissingDataError("stores missing '{}' attribute".format(attr))
+    check_keys(store_data, ["manifest", "stores"], "stores")
     seen_s_id = set()
     for store in store_data.get("stores"):
-        for attr in ["type", "s_id", "sc_id"]:
-            if not store.get(attr):
-                raise MissingDataError("store missing '{}' attribute".format(attr))
+        check_keys(store, ["type", "s_id", "sc_id"], "store")
         type = store.get('type')
         s_id = store.get('s_id')
         sc_id = store.get('sc_id')
-        if s_id in seen_s_id:
-            raise DuplicateIdError("duplicate s_id: '{}".format(sc_id))
+        check_duplicate(s_id, seen_s_id, "s_id")
         if handler:
             handler.handle_store(type, s_id, sc_id)
 

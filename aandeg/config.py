@@ -2,15 +2,17 @@ import json
 
 DEFAULT_CONFIG_FILE_NAME = '.aandeg.json'
 
+
 # get args from aandeg.config object
 # in future, modify this to get args from AWS lambda_handler context
 def args_from_context(context):
-    if isinstance(context, config):
+    if isinstance(context, Config):
         return context.get_args()
     else:
         ret = [None, None, None, None, None]
 
-class config():
+
+class Config():
     def __init__(self, filename=DEFAULT_CONFIG_FILE_NAME):
         self.config_data = None
         with open(filename) as json_file:

@@ -9,6 +9,7 @@ def test_dynavail_bootstrap():
     print(client.describe_table(TableName=dynavail.TN_STORE))
     print(client.list_tables())
 
+
 def test_put():
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
     table = dynamodb.Table(dynavail.TN_STORE)

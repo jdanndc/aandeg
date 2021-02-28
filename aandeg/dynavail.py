@@ -1,6 +1,7 @@
 
 TN_STORE = 'Store'
 
+
 def bootstrap(client):
     try:
         # TODO: change from client to this:

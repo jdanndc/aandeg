@@ -1,7 +1,7 @@
 from handler.postgres import PostgresHandler
 from handler.collect import CollectHandler
 from aandeg.read_json import read_store_data_json
-from aandeg.config import config
+from aandeg.config import Config
 
 store_test_json_str = """
 {
@@ -39,13 +39,15 @@ def test_read_store_str():
     assert(ch.store_collect_list[1].get('s_id') == 'store_2')
     assert(ch.store_collect_list[2].get('s_id') == 'store_3')
 
+
 def test_read_store_file():
     # just make sure we can read the file without errors
     ch = CollectHandler()
     read_store_data_json("./data/store.json", ch, is_filename=True)
 
+
 def test_read_store_db_handler():
-    with PostgresHandler(*config().get_args(), is_testing=True) as pgm:
+    with PostgresHandler(*Config().get_args(), is_testing=True) as pgm:
         read_store_data_json(store_test_json_str, pgm, is_filename=False)
         cursor = pgm.connection.cursor()
         cursor.execute("""SELECT * FROM store""")
