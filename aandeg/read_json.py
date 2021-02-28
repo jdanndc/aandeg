@@ -18,15 +18,15 @@ def get_json_data(fn_or_json, is_filename):
 def read_equip_class_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
     assert(isinstance(handler, BaseHandler))
     equip_class_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "equip-classes"]:
+    for attr in ["manifest", "equip_classes"]:
         if not equip_class_data.get(attr):
-            raise MissingDataError("equip-classes missing '{}' attribute".format(attr))
+            raise MissingDataError("equip_classes missing '{}' attribute".format(attr))
     seen_depends = set()
     seen_ec_id = set()
-    for equip_class in equip_class_data.get("equip-classes"):
+    for equip_class in equip_class_data.get("equip_classes"):
         for attr in ["type", "ec_id"]:
             if not equip_class.get(attr):
-                raise MissingDataError("equip-class missing '{}' attribute".format(attr))
+                raise MissingDataError("equip_class missing '{}' attribute".format(attr))
         ec_id = equip_class.get('ec_id')
         type = equip_class.get('type')
         if ec_id in seen_ec_id:
@@ -45,15 +45,15 @@ def read_equip_class_data_json(fn_or_json, handler, is_filename=False, check_dep
 def read_prod_class_data_json(fn_or_json, handler, is_filename=False, check_depends=False):
     assert(isinstance(handler, BaseHandler))
     prod_class_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "product-classes"]:
+    for attr in ["manifest", "product_classes"]:
         if not prod_class_data.get(attr):
-            raise MissingDataError("product-classes missing '{}' attribute".format(attr))
+            raise MissingDataError("product_classes missing '{}' attribute".format(attr))
     # check for local duplicates
     seen_pc_id = set()
-    for prod_class in prod_class_data.get("product-classes"):
+    for prod_class in prod_class_data.get("product_classes"):
         for attr in ["type", "pc_id"]:
             if not prod_class.get(attr):
-                raise MissingDataError("product-class missing '{}' attribute".format(attr))
+                raise MissingDataError("product_class missing '{}' attribute".format(attr))
         pc_id = prod_class.get('pc_id')
         type = prod_class.get('type')
         if pc_id in seen_pc_id:
@@ -68,14 +68,14 @@ def read_prod_class_data_json(fn_or_json, handler, is_filename=False, check_depe
 def read_store_class_data_json(fn_or_json, handler, is_filename=False):
     assert(isinstance(handler, BaseHandler))
     store_class_data = get_json_data(fn_or_json, is_filename)
-    for attr in ["manifest", "store-classes"]:
+    for attr in ["manifest", "store_classes"]:
         if not store_class_data.get(attr):
-            raise MissingDataError("store-classes missing '{}' attribute".format(attr))
+            raise MissingDataError("store_classes missing '{}' attribute".format(attr))
     seen_sc_id = set()
-    for store_class in store_class_data.get("store-classes"):
+    for store_class in store_class_data.get("store_classes"):
         for attr in ["type", "sc_id"]:
             if not store_class.get(attr):
-                raise MissingDataError("store-class missing '{}' attribute".format(attr))
+                raise MissingDataError("store_class missing '{}' attribute".format(attr))
         sc_id = store_class.get('sc_id')
         type = store_class.get('type')
         if sc_id in seen_sc_id:

@@ -8,18 +8,18 @@ store_test_json_str = """
   "stores": [
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-1"
+      "sc_id": "store_default",
+      "s_id": "store_1"
     },
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-2"
+      "sc_id": "store_default",
+      "s_id": "store_2"
     },
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-3"
+      "sc_id": "store_default",
+      "s_id": "store_3"
     }
   ]
 }
@@ -31,12 +31,12 @@ def test_read_store_str():
     read_store_data_json(store_test_json_str, ch, is_filename=False)
     assert(len(ch.store_collect_list) == 3)
     assert(ch.store_collect_list[0].get('type') == 'store')
-    assert(ch.store_collect_list[0].get('sc_id') == 'store-default')
-    assert(ch.store_collect_list[0].get('s_id') == 'store-1')
+    assert(ch.store_collect_list[0].get('sc_id') == 'store_default')
+    assert(ch.store_collect_list[0].get('s_id') == 'store_1')
     assert(ch.store_collect_list[1].get('type') == 'store')
-    assert(ch.store_collect_list[1].get('sc_id') == 'store-default')
-    assert(ch.store_collect_list[1].get('s_id') == 'store-2')
-    assert(ch.store_collect_list[2].get('s_id') == 'store-3')
+    assert(ch.store_collect_list[1].get('sc_id') == 'store_default')
+    assert(ch.store_collect_list[1].get('s_id') == 'store_2')
+    assert(ch.store_collect_list[2].get('s_id') == 'store_3')
 
 def test_read_store_file():
     # just make sure we can read the file without errors

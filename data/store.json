@@ -3,23 +3,23 @@
   "stores": [
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-1"
+      "sc_id": "store_default",
+      "s_id": "store_1"
     },
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-2"
+      "sc_id": "store_default",
+      "s_id": "store_2"
     },
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-3"
+      "sc_id": "store_default",
+      "s_id": "store_3"
     },
     {
       "type": "store",
-      "sc_id": "store-default",
-      "s_id": "store-4"
+      "sc_id": "store_default",
+      "s_id": "store_4"
     }
   ]
 }

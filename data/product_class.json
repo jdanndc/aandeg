@@ -1,77 +1,77 @@
 {
   "manifest": "initial load",
-  "product-classes": [
+  "product_classes": [
     {
-      "type": "product-class",
-      "pc_id": "hot-burrito-toasted",
+      "type": "product_class",
+      "pc_id": "hot_burrito_toasted",
       "equip_class_depends": [
-        "device-fridge-prep",
-        "device-oven",
-        "device-toaster"
+        "device_fridge_prep",
+        "device_oven",
+        "device_toaster"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "cold-fountain-soda",
+      "type": "product_class",
+      "pc_id": "cold_fountain_soda",
       "equip_class_depends": [
-        "device-fountain-soda",
-        "device-ice-maker"
+        "device_fountain_soda",
+        "device_ice_maker"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "cold-bottle-soda",
+      "type": "product_class",
+      "pc_id": "cold_bottle_soda",
       "equip_class_depends": [
-        "device-fridge-beverage"
+        "device_fridge_beverage"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "dry-chips-corn-spicy"
+      "type": "product_class",
+      "pc_id": "dry_chips_corn_spicy"
     },
     {
-      "type": "product-class",
-      "pc_id": "warm-chips",
+      "type": "product_class",
+      "pc_id": "warm_chips",
       "equip_class_depends": [
-        "device-warming-window"
+        "device_warming_window"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "warm-chips-salsa",
+      "type": "product_class",
+      "pc_id": "warm_chips_salsa",
       "equip_class_depends": [
-        "device-warming-window",
-        "device-cold-prep"
+        "device_warming_window",
+        "device_cold_prep"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "cold-taco-salad",
+      "type": "product_class",
+      "pc_id": "cold_taco_salad",
       "equip_class_depends": [
-        "device-cold-prep"
+        "device_cold_prep"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "warm-chips-queso",
+      "type": "product_class",
+      "pc_id": "warm_chips_queso",
       "equip_class_depends": [
-        "device-warming-window",
-        "device-warmer-queso"
+        "device_warming_window",
+        "device_warmer_queso"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "ice-cream-cone",
+      "type": "product_class",
+      "pc_id": "ice_cream_cone",
       "equip_class_depends": [
-        "device-icecream-machine"
+        "device_icecream_machine"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "ice-cream-sundae-hot-fudge",
+      "type": "product_class",
+      "pc_id": "ice_cream_sundae_hot_fudge",
       "equip_class_depends": [
-        "device-warmer-fudge",
-        "device-icecream-machine"
+        "device_warmer_fudge",
+        "device_icecream_machine"
       ]
     }
   ]

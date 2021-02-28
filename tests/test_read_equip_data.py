@@ -6,16 +6,16 @@ def test_read_equip_data():
     str = """
     {
         "manifest": "initial load",
-        "equip-classes": [
+        "equip_classes": [
             {
-                "type": "equip-class",
-                "ec_id": "water-supply"
+                "type": "equip_class",
+                "ec_id": "water_supply"
             },
             {
-                "type": "equip-class",
-                "ec_id": "water-main",
+                "type": "equip_class",
+                "ec_id": "water_main",
                 "depends": [
-                    "water-supply"
+                    "water_supply"
                 ]
             }
         ]

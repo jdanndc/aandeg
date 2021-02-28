@@ -1,11 +1,11 @@
 {
   "manifest": "add one equip",
-  "equip-classes": [
+  "equip_classes": [
     {
-      "type": "equip-class",
-      "ec_id": "device-toaster",
+      "type": "equip_class",
+      "ec_id": "device_toaster",
       "depends": [
-        "elec-outlet"
+        "elec_outlet"
       ]
     }
   ]

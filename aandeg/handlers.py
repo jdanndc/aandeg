@@ -5,6 +5,9 @@ from abc import ABC, abstractmethod
 EC_DEPEND_TYPE_DEFINED = "defined"
 EC_DEPEND_TYPE_IMPUTED = "imputed"
 INCIDENT_REPORT_TYPE_FAIL = "FAIL"
+# ALERT: this must match in the equip_class data
+# TODO: move this define to somewhere else
+STORE_OPEN_EQUIP_ID = "store_open"
 
 class BaseHandler(ABC):
     def __init__(self):
@@ -252,8 +255,8 @@ class PostgresHandler(BaseHandler):
         FROM equip_class_depends ecp 
         WHERE ecp.ec_id_parent 
             IN (SELECT ec_id FROM incident_report ir WHERE ir.s_id = %s)
-            AND ecp.ec_id = 'store-open'
-        """, (s_id,))
+            AND ecp.ec_id = '{}'
+        """.format(STORE_OPEN_EQUIP_ID), (s_id,))
         ret = cursor.fetchone()[0]
         return ret == 0
 

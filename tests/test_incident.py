@@ -16,9 +16,9 @@ def prepare_for_incident_test(pgm: PostgresHandler):
 def test_incident():
     with PostgresHandler(*config().get_args(), is_testing=True) as pgm:
         prepare_for_incident_test(pgm)
-        s_id = 'store-1'
+        s_id = 'store_1'
         pgm.clear_store_incidents(s_id)
-        ec_id = 'device-water-filtration'
+        ec_id = 'device_water_filtration'
         incident_id = pgm.create_incident_report(s_id, ec_id)
         print("created incident with id: {}".format(incident_id))
 
@@ -33,11 +33,11 @@ def test_incident():
 def test_store_is_open():
     with PostgresHandler(*config().get_args(), is_testing=True) as pgm:
         prepare_for_incident_test(pgm)
-        s_id = 'store-1'
+        s_id = 'store_1'
         pgm.clear_store_incidents(s_id)
         assert(pgm.store_is_open(s_id))
         assert(len(pgm.get_available_store_products(s_id)) > 0)
-        incident_id = pgm.create_incident_report(s_id, 'device-hvac')
+        incident_id = pgm.create_incident_report(s_id, 'device_hvac')
         assert(not pgm.store_is_open(s_id))
         assert(len(pgm.get_available_store_products(s_id)) == 0)
 

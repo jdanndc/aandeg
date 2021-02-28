@@ -13,8 +13,8 @@ def test_put():
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://localhost:8000")
     table = dynamodb.Table(dynavail.TN_STORE)
     try:
-        response = table.put_item(Item={"id": "store-1"})
-        response = table.get_item(Key={"id": "store-1"})
+        response = table.put_item(Item={"id": "store_1"})
+        response = table.get_item(Key={"id": "store_1"})
         assert(response['Item'] is not None)
         print(response['Item'])
     except ClientError as e:
@@ -24,7 +24,7 @@ def test_put():
     try:
         response = table.delete_item(Key={"id":"store-2"})
         store_2_item = {
-            "id": "store-2",
+            "id": "store_2",
             "location": { "City": "Media", "State": "PA" },
             "products": {
                 "meatball_sub": {"available": True},
@@ -32,7 +32,7 @@ def test_put():
             }
         }
         response = table.put_item(Item=store_2_item)
-        response = table.get_item(Key={"id": "store-2"})
+        response = table.get_item(Key={"id": "store_2"})
         assert(response['Item'] is not None)
         assert(response['Item'].get('products') is not None)
         assert(response['Item'].get('products').get('meatball_sub') is not None)
@@ -42,21 +42,21 @@ def test_put():
         # see here for expression info:
         # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.Attributes.html
         table.update_item(
-            Key={"id": "store-2"},
+            Key={"id": "store_2"},
             UpdateExpression="SET products.meatball_sub.available=:a",
             ExpressionAttributeValues={
                 ':a': False
             },
             ReturnValues="UPDATED_NEW"
         )
-        response = table.get_item(Key={"id": "store-2"})
+        response = table.get_item(Key={"id": "store_2"})
         print(response['Item'])
         assert(response['Item'].get('products') is not None)
         assert(response['Item'].get('products').get('meatball_sub') is not None)
         assert(response['Item'].get('products').get('meatball_sub').get('available') is not None)
         assert(response['Item'].get('products').get('meatball_sub').get('available') == False)
         response = table.put_item(Item=store_2_item)
-        response = table.get_item(Key={"id": "store-2"})
+        response = table.get_item(Key={"id": "store_2"})
         assert(response['Item'].get('products').get('meatball_sub').get('available') == True)
         i = 0
     except ClientError as e:

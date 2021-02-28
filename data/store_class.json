@@ -1,13 +1,13 @@
 {
   "manifest": "initial load",
-  "store-classes": [
+  "store_classes": [
     {
-      "type": "store-class",
-      "sc_id": "store-default"
+      "type": "store_class",
+      "sc_id": "store_default"
     },
     {
-      "type": "store-class",
-      "sc_id": "store-express"
+      "type": "store_class",
+      "sc_id": "store_express"
     }
   ]
 }

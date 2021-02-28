@@ -5,22 +5,22 @@ from aandeg.config import config
 test_json_str = """
 {
   "manifest": "initial load",
-  "product-classes": [
+  "product_classes": [
     {
-      "type": "product-class",
-      "pc_id": "hot-burrito-toasted",
+      "type": "product_class",
+      "pc_id": "hot_burrito_toasted",
       "equip_class_depends": [
-        "device-fridge-prep",
-        "device-oven",
-        "device-toaster"
+        "device_fridge_prep",
+        "device_oven",
+        "device_toaster"
       ]
     },
     {
-      "type": "product-class",
-      "pc_id": "cold-fountain-soda",
+      "type": "product_class",
+      "pc_id": "cold_fountain_soda",
       "equip_class_depends": [
-        "device-fountain-soda",
-        "device-ice-maker"
+        "device_fountain_soda",
+        "device_ice_maker"
       ]
     }
   ]
@@ -32,9 +32,9 @@ def test_read_prod_string():
     ch = CollectHandler()
     read_prod_class_data_json(test_json_str, ch, is_filename=False)
     assert(len(ch.prod_class_collect_list) == 2)
-    assert(ch.prod_class_collect_list[0].get('type') == 'product-class')
-    assert(ch.prod_class_collect_list[0].get('pc_id') == 'hot-burrito-toasted')
-    assert(ch.prod_class_collect_list[1].get('pc_id') == 'cold-fountain-soda')
+    assert(ch.prod_class_collect_list[0].get('type') == 'product_class')
+    assert(ch.prod_class_collect_list[0].get('pc_id') == 'hot_burrito_toasted')
+    assert(ch.prod_class_collect_list[1].get('pc_id') == 'cold_fountain_soda')
     assert(len(ch.prod_class_collect_list[0].get('depend_ecids')) == 3)
     assert(len(ch.prod_class_collect_list[1].get('depend_ecids')) == 2)
 

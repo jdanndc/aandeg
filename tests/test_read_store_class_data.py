@@ -5,10 +5,10 @@ from aandeg.config import config
 store_classes_test_json_str = """
 {
   "manifest": "initial load",
-  "store-classes": [
+  "store_classes": [
     {
-      "type": "store-class",
-      "sc_id": "store-default"
+      "type": "store_class",
+      "sc_id": "store_default"
     }
   ]
 }
@@ -19,8 +19,8 @@ def test_read_store_class_str():
     ch = CollectHandler()
     read_store_class_data_json(store_classes_test_json_str, ch, is_filename=False)
     assert(len(ch.store_class_collect_list) == 1)
-    assert(ch.store_class_collect_list[0].get('type') == 'store-class')
-    assert(ch.store_class_collect_list[0].get('sc_id') == 'store-default')
+    assert(ch.store_class_collect_list[0].get('type') == 'store_class')
+    assert(ch.store_class_collect_list[0].get('sc_id') == 'store_default')
 
 def test_read_store_class_file():
     # just make sure we can read the file without errors

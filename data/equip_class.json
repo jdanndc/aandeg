@@ -1,174 +1,174 @@
 {
   "manifest": "initial load",
-  "equip-classes": [
+  "equip_classes": [
     {
-      "type": "equip-class",
-      "ec_id": "water-supply"
+      "type": "equip_class",
+      "ec_id": "water_supply"
     },
     {
-      "type": "equip-class",
-      "ec_id": "water-main",
+      "type": "equip_class",
+      "ec_id": "water_main",
       "depends": [
-        "water-supply"
+        "water_supply"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "water-circuit",
+      "type": "equip_class",
+      "ec_id": "water_circuit",
       "depends": [
-        "water-main"
+        "water_main"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "water-outlet",
+      "type": "equip_class",
+      "ec_id": "water_outlet",
       "depends": [
-        "water-circuit"
+        "water_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-water-filtration",
+      "type": "equip_class",
+      "ec_id": "device_water_filtration",
       "depends": [
-        "water-outlet"
+        "water_outlet"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "elec-supply"
+      "type": "equip_class",
+      "ec_id": "elec_supply"
     },
     {
-      "type": "equip-class",
-      "ec_id": "elec-main",
+      "type": "equip_class",
+      "ec_id": "elec_main",
       "depends": [
-        "elec-supply"
+        "elec_supply"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "elec-panel",
+      "type": "equip_class",
+      "ec_id": "elec_panel",
       "depends": [
-        "elec-main"
+        "elec_main"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "elec-circuit",
+      "type": "equip_class",
+      "ec_id": "elec_circuit",
       "depends": [
-        "elec-panel"
+        "elec_panel"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-ice-maker",
+      "type": "equip_class",
+      "ec_id": "device_ice_maker",
       "depends": [
-        "elec-circuit",
-        "device-water-filtration"
+        "elec_circuit",
+        "device_water_filtration"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-dishwasher",
+      "type": "equip_class",
+      "ec_id": "device_dishwasher",
       "depends": [
-        "elec-circuit",
-        "water-outlet"
+        "elec_circuit",
+        "water_outlet"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-hvac",
+      "type": "equip_class",
+      "ec_id": "device_hvac",
       "depends": [
-        "elec-panel"
+        "elec_panel"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-water-heater",
+      "type": "equip_class",
+      "ec_id": "device_water_heater",
       "depends": [
-        "elec-panel",
-        "water-main"
+        "elec_panel",
+        "water_main"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-co2-delivery",
+      "type": "equip_class",
+      "ec_id": "device_co2_delivery",
       "depends": [
-        "co2-main"
+        "co2_main"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-fountain-soda",
+      "type": "equip_class",
+      "ec_id": "device_fountain_soda",
       "depends": [
-        "device-water-filtration",
-        "device-co2-delivery",
-        "elec-circuit"
+        "device_water_filtration",
+        "device_co2_delivery",
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "store-open",
+      "type": "equip_class",
+      "ec_id": "store_open",
       "depends": [
-        "device-hvac",
-        "device-water-heater",
-        "water-main"
+        "device_hvac",
+        "device_water_heater",
+        "water_main"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-oven",
+      "type": "equip_class",
+      "ec_id": "device_oven",
       "depends": [
-        "elec-panel"
+        "elec_panel"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-fridge-prep",
+      "type": "equip_class",
+      "ec_id": "device_fridge_prep",
       "depends": [
-        "elec-circuit"
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-fridge-beverage",
+      "type": "equip_class",
+      "ec_id": "device_fridge_beverage",
       "depends": [
-        "elec-circuit"
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-warmer-queso",
+      "type": "equip_class",
+      "ec_id": "device_warmer_queso",
       "depends": [
-        "elec-circuit"
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-warmer-fudge",
+      "type": "equip_class",
+      "ec_id": "device_warmer_fudge",
       "depends": [
-        "elec-circuit"
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-warming-window",
+      "type": "equip_class",
+      "ec_id": "device_warming_window",
       "depends": [
-        "elec-circuit"
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-cold-prep",
+      "type": "equip_class",
+      "ec_id": "device_cold_prep",
       "depends": [
-        "elec-circuit"
+        "elec_circuit"
       ]
     },
     {
-      "type": "equip-class",
-      "ec_id": "device-icecream-machine",
+      "type": "equip_class",
+      "ec_id": "device_icecream_machine",
       "depends": [
-        "device-water-filtration",
-        "elec-circuit"
+        "device_water_filtration",
+        "elec_circuit"
       ]
     }
   ]
