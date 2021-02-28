@@ -1,5 +1,5 @@
 from aandeg.config import config
-from aandeg.handlers import PostgresHandler
+from handler.postgres import PostgresHandler
 from optparse import OptionParser
 
 

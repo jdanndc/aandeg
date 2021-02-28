@@ -1,35 +1,13 @@
 import traceback
 from aandeg.util import create_connection
-from abc import ABC, abstractmethod
 
-EC_DEPEND_TYPE_DEFINED = "defined"
-EC_DEPEND_TYPE_IMPUTED = "imputed"
-INCIDENT_REPORT_TYPE_FAIL = "FAIL"
-# ALERT: this must match in the equip_class data
-# TODO: move this define to somewhere else
-STORE_OPEN_EQUIP_ID = "store_open"
+from handler.base import BaseHandler
+from handler.base import EC_DEPEND_TYPE_DEFINED, EC_DEPEND_TYPE_IMPUTED, INCIDENT_REPORT_TYPE_FAIL,  STORE_OPEN_EQUIP_ID
 
-class BaseHandler(ABC):
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def handle_equip_class(self, type, ecid, depend_ecids=None):
-        pass
-
-    @abstractmethod
-    def handle_prod_class(self, type, pc_id, depend_ecids=None):
-        pass
-
-    @abstractmethod
-    def handle_store_class(self, type, sc_id):
-        pass
-
-    @abstractmethod
-    def handle_store(self, type, s_id, sc_id):
-        pass
-
-
+# TODO:
+# create a class RDBHandler(BaseHandler)
+# that handles all the common RDB functionality between AWS RDS and local Postgres
+# and then one instance for PostgresHandler and one for AWS RDS
 class PostgresHandler(BaseHandler):
     # TODO: handle the password more safely
     def __init__(self, db_name, db_user, db_password, db_host, db_port, is_testing=False):
@@ -72,26 +50,19 @@ class PostgresHandler(BaseHandler):
         return True
 
     def handle_equip_class(self, type, ec_id, depend_ec_ids=None):
-        # TODO: check that ec_id_parent exists before inserting into the depends table
-        #  we do check while reading the file, but the ec_id of a ec_id_parent could be deleted out-of-band
         cursor = self.connection.cursor()
         cursor.execute(""" INSERT INTO equip_class(ec_id,type) VALUES(%s, %s) """, (ec_id, type))
         if depend_ec_ids is not None:
             for depend in depend_ec_ids:
-                # TODO: confirm that the ec_id for depend exists in equip_class table
-                #  was previously checked during json parsing, but disabled to allow for update
                 cursor.execute(""" INSERT INTO equip_class_depends(ec_id,ec_id_parent,depend_type) VALUES(%s, %s, %s) """,
                                (ec_id, depend, EC_DEPEND_TYPE_DEFINED))
         self.connection.commit()
 
     def handle_prod_class(self, type, pc_id, depend_ec_ids=None):
-        # TODO: check that ec_id exists before inserting into the depends table
         cursor = self.connection.cursor()
         cursor.execute(""" INSERT INTO prod_class(pc_id,type) VALUES(%s, %s) """, (pc_id, type))
         if depend_ec_ids is not None:
             for depend in depend_ec_ids:
-                # todo: confirm that the ec_id for depend exists in equip_class table
-                #  was previously checked during json parsing, but disabled to allow for update
                 cursor.execute(""" INSERT INTO prod_class_depends(pc_id,ec_id_parent,depend_type) VALUES(%s, %s, %s)""",
                                (pc_id, depend, EC_DEPEND_TYPE_DEFINED))
         self.connection.commit()
@@ -147,14 +118,6 @@ class PostgresHandler(BaseHandler):
                     SELECT ec_id FROM equip_class_depends WHERE ec_id = %s and ec_id_parent = %s
                 )
             """, (dp[0], dp[1], EC_DEPEND_TYPE_IMPUTED, dp[0], dp[1]))
-        self.connection.commit()
-        cursor.close()
-
-    def update_store_classes_with_all_products(self):
-        cursor = self.connection.cursor()
-        cursor.execute("""SELECT DISTINCT sc_id FROM store_class""")
-        for sc in cursor.fetchall():
-            cursor.execute("""INSERT INTO store_class_prod(sc_id, pc_id) SELECT %s, pc_id from prod_class""", (sc,))
         self.connection.commit()
         cursor.close()
 
@@ -277,27 +240,16 @@ class PostgresHandler(BaseHandler):
         self.connection.commit()
         cursor.close()
 
+    # TODO: this is only for demo purposes
+    # all store classes get all products
+    # in a real system, different store classes would have different sets of products
+    # and these relations would be filled in through data
+    def update_store_classes_with_all_products(self):
+        cursor = self.connection.cursor()
+        cursor.execute("""SELECT DISTINCT sc_id FROM store_class""")
+        for sc in cursor.fetchall():
+            cursor.execute("""INSERT INTO store_class_prod(sc_id, pc_id) SELECT %s, pc_id from prod_class""", (sc,))
+        self.connection.commit()
+        cursor.close()
 
-class CollectHandler(BaseHandler):
-    def __init__(self):
-        self.equip_class_collect_list = []
-        self.prod_class_collect_list = []
-        self.store_class_collect_list = []
-        self.store_collect_list = []
-
-    def handle_equip_class(self, type, ecid, depend_ecids=None):
-        d = {'type':type, 'ecid':ecid, 'depend_ecids':depend_ecids}
-        self.equip_class_collect_list.append(d)
-
-    def handle_prod_class(self, type, pc_id, depend_ecids=None):
-        d = {'type':type, 'pc_id':pc_id, 'depend_ecids':depend_ecids}
-        self.prod_class_collect_list.append(d)
-
-    def handle_store_class(self, type, sc_id):
-        d = {'type':type, 'sc_id':sc_id}
-        self.store_class_collect_list.append(d)
-
-    def handle_store(self, type, s_id, sc_id):
-        d = {'type':type, 's_id':s_id, 'sc_id':sc_id}
-        self.store_collect_list.append(d)
 

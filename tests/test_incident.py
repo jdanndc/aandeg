@@ -1,5 +1,5 @@
 from aandeg.config import config
-from aandeg.handlers import PostgresHandler
+from handler.postgres import PostgresHandler
 from read_json import read_equip_class_data_json, read_prod_class_data_json, read_store_class_data_json, read_store_data_json
 
 # testing helper method

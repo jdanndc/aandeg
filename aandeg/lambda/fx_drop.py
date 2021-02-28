@@ -1,5 +1,5 @@
 from aandeg.config import config, args_from_context
-from aandeg.handlers import PostgresHandler
+from handler.postgres import PostgresHandler
 
 
 def lambda_handler(event, context):

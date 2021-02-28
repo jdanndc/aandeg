@@ -1,4 +1,5 @@
-from aandeg.handlers import CollectHandler, PostgresHandler
+from handler.postgres import PostgresHandler
+from handler.collect import CollectHandler
 from aandeg.read_json import read_store_data_json
 from aandeg.config import config
 

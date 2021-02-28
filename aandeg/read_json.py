@@ -1,7 +1,8 @@
 import json
 from decimal import Decimal
 from aandeg.exceptions import MissingDataError, DuplicateIdError, UnknownDependsError
-from aandeg.handlers import BaseHandler
+from handler.base import BaseHandler
+
 
 # TODO: these methods could be be tightened up
 # read json from either a string or a file, depending on is_filename flag

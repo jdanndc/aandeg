@@ -1,5 +1,5 @@
 from aandeg.config import config, args_from_context
-from aandeg.handlers import PostgresHandler
+from handler.postgres import PostgresHandler
 from aandeg.util import file_to_json_data
 from aandeg.read_json import read_equip_class_data_json, read_prod_class_data_json
 from aandeg.read_json import read_store_data_json, read_store_class_data_json
