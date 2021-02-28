@@ -37,7 +37,7 @@ class Config():
                     ret.append(dbinfo.get(k))
         return ret
 
-    def connection(self):
+    def create_connection(self):
         conn = create_connection(*self.get_args())
         return conn
 

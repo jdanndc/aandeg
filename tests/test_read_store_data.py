@@ -47,7 +47,7 @@ def test_read_store_file():
 
 
 def test_read_store_db_handler():
-    with PostgresHandler(Config().connection(), is_testing=True) as pgm:
+    with PostgresHandler(Config().create_connection(), is_testing=True) as pgm:
         read_store_data_json(store_test_json_str, pgm, is_filename=False)
         cursor = pgm.connection.cursor()
         cursor.execute("""SELECT * FROM store""")

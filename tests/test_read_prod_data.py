@@ -47,7 +47,7 @@ def test_read_prod_file():
 
 
 def test_read_prod_db_handler():
-    with PostgresHandler(Config().connection(), is_testing=True) as pgm:
+    with PostgresHandler(Config().create_connection(), is_testing=True) as pgm:
         read_prod_class_data_json(test_json_str, pgm, is_filename=False)
         cursor = pgm.connection.cursor()
         cursor.execute("""SELECT * FROM prod_class""")

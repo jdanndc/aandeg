@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 EC_DEPEND_TYPE_DEFINED = "defined"
 EC_DEPEND_TYPE_IMPUTED = "imputed"
@@ -6,7 +6,7 @@ INCIDENT_REPORT_TYPE_FAIL = "FAIL"
 STORE_OPEN_EQUIP_ID = "store_open"
 
 
-class BaseHandler(ABC):
+class BaseHandler():
     def __init__(self):
         pass
 

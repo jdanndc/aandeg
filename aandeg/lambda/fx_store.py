@@ -21,4 +21,4 @@ if __name__ == "__main__":
 
     data = file_to_json_data(filename)
     event = {'payload': data}
-    lambda_handler(event, { "conn" : Config().connection()})
+    lambda_handler(event, { "conn" : Config().create_connection()})

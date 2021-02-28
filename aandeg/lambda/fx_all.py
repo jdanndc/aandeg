@@ -1,5 +1,5 @@
 from aandeg.util.config import Config
-from aandeg.administer import Administer
+from aandeg.model import Model
 from aandeg.util.read_json import read_equip_class_data_json, read_prod_class_data_json, file_to_json_data
 from aandeg.util.read_json import read_store_data_json, read_store_class_data_json
 from aandeg.data_handler.postgres import PostgresHandler
@@ -16,11 +16,11 @@ def lambda_handler(event, context):
         read_prod_class_data_json(file_to_json_data('./data/product_class.json'), pgh, is_filename=False)
         read_store_class_data_json(file_to_json_data('./data/store_class.json'), pgh, is_filename=False)
         read_store_data_json(file_to_json_data('./data/store.json'), pgh, is_filename=False)
-        admin = Administer(conn)
-        admin.update_imputed_depends()
-        admin.update_store_classes_with_all_products()
+        model = Model(conn)
+        model.update_imputed_depends()
+        model.update_store_classes_with_all_products()
 
 
 if __name__ == "__main__":
-    lambda_handler(None, { "conn" : Config().connection()})
+    lambda_handler(None, { "conn" : Config().create_connection()})
 
