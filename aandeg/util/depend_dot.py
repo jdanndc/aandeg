@@ -6,8 +6,8 @@ model = Model(Config().create_connection())
 
 print("""
 digraph depend_dot {{
-    node [shape=box];
     rankdir="LR";    
+    node [shape=box];
     {}
     {}
 }}

@@ -1,23 +1,13 @@
-from aandeg.data_handler.base import EC_DEPEND_TYPE_IMPUTED, INCIDENT_REPORT_TYPE_FAIL,  STORE_OPEN_EQUIP_ID
-from aandeg.model import Model
 import inspect
+from aandeg.model import Model
+from aandeg.data_handler.base import INCIDENT_REPORT_TYPE_FAIL
+from aandeg.availability import Availability
 
 class Administer(object):
     def __init__(self, db_conn):
         self.connection = db_conn
         self.model = Model(self.connection)
-        pass
-
-    #@staticmethod
-    # TODO: change to staticmethod
-    def ok_status(self, payload):
-        return {
-            "result": {
-                "status": "OK",
-                "method": inspect.stack()[1][3],
-            },
-            "payload" : payload
-        }
+        self.availability = Availability()
 
     def create_incident_report(self, s_id, ec_id, itype=INCIDENT_REPORT_TYPE_FAIL, description=""):
         return self.ok_status(
@@ -75,10 +65,73 @@ class Administer(object):
         }
         return self.ok_status(payload)
 
+    def list_equip(self):
+        return self.ok_status( { "equip_class": [ x[0] for x in self.model.list_table('equip_class') ] } )
+
+    def list_stores(self):
+        return self.ok_status( { "store": [ { "id": x[0], "type": x[1] } for x in self.model.list_table('store') ] } )
+
+    def list_products(self):
+        return self.ok_status( { "prod_class": [ x[0] for x in self.model.list_table('prod_class') ] } )
+
     def _get_store_info(self, s_id):
         return {
             "store_id": s_id,
             "is_open": self.model.store_is_open(s_id)
         }
 
+    def ok_status(self, payload):
+        return {
+            "result": {
+                "status": "OK",
+                "method": inspect.stack()[1][3],
+            },
+            "payload" : payload
+        }
+
+    # beware, we are scanning all
+    # TODO: use FilterExpressions
+    def avail_list_stores(self, is_verbose=False):
+        self.availability.get_table()
+        scan_kwargs = {
+            #'FilterExpression': 'is_open = :is_open',
+            #'ExpressionAttributeValues : {
+            #   ':is_open': true
+            #}
+            #'ExpressionAttributeNames': {"#is_open": "UNK"}
+        }
+        if not is_verbose:
+            scan_kwargs['ProjectionExpression'] = "id, is_open"
+        stores = []
+        done = False
+        start_key = None
+        while not done:
+            if start_key:
+                scan_kwargs['ExclusiveStartKey'] = start_key
+            response = self.availability.get_table().scan(**scan_kwargs)
+            stores.append(response.get('Items'))
+            start_key = response.get('LastEvaluatedKey', None)
+            done = start_key is None
+        return stores
+
+    def avail_list_store(self, store_id):
+        response = self.availability.get_table().get_item(Key={"id": store_id})
+        return response.get("Item")
+
+    def avail_update_store(self, store_id):
+        self.availability.update_store(self.model, store_id)
+        return self.avail_list_store(store_id)
+
+    # update table in Availability data store with data from the model data store
+    def avail_update_all_stores(self):
+        pre_count = self.availability.get_table().item_count
+        self.availability.update_all_stores(self.model)
+        post_count = self.availability.get_table().item_count
+        return self.ok_status(
+            {
+                "method": "update_all_stores",
+                "pre_count": pre_count,
+                "post_count": post_count
+            }
+        )
 

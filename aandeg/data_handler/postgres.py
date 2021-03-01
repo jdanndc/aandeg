@@ -2,7 +2,7 @@ import traceback
 
 from aandeg.data_handler.base import BaseHandler
 from aandeg.data_handler.base import EC_DEPEND_TYPE_DEFINED
-from aandeg.util.dbutil import create_tables
+from aandeg.util.dbutil import create_tables, drop_tables
 
 
 # TODO:
@@ -14,18 +14,14 @@ class PostgresHandler(BaseHandler):
     def __init__(self, db_conn, is_testing=False):
         self.connection = db_conn
         self.is_testing = is_testing
-        self.pg_temp_table = None
 
-    # ASSUMPTION: expectation is to use this class as a context manager, in a with statement
+    # ASSUMPTION: expectation is to use this class as a context manager, in a with statement, for testing
     def __enter__(self):
         if self.is_testing:
             cursor = self.connection.cursor()
-            cursor.execute("""SET search_path TO pg_temp""")
+            cursor.execute("""SET search_path TO test""")
+            drop_tables(self.connection)
             create_tables(self.connection)
-            cursor = self.connection.cursor()
-            # for testing only, get the real name of the pg_temp table that the test is writing to
-            cursor.execute("SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()")
-            self.pg_temp_table = cursor.fetchone()[0]
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
@@ -34,6 +30,7 @@ class PostgresHandler(BaseHandler):
             # return False in order to let exception pass through
             return False
         if self.is_testing:
+            drop_tables(self.connection)
             self.connection.close()
         return True
 

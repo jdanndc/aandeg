@@ -1,5 +1,4 @@
 from aandeg.util.config import Config
-from aandeg.administer import Administer
 from aandeg.model import Model
 from aandeg.data_handler.postgres import PostgresHandler
 from aandeg.util.read_json import read_equip_class_data_json, read_prod_class_data_json, read_store_class_data_json, read_store_data_json
